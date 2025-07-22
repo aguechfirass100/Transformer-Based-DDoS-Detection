@@ -1,0 +1,12 @@
+uv
+pandas
+numpy
+matplotlib
+seaborn
+plotly
+missingno
+jupyter
+ipykernel
+scapy
+tqdm
+scikit-learn
