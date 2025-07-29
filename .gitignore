@@ -145,6 +145,10 @@ env.bak/
 venv.bak/
 data/
 CSV-01-12.zip
+model/lightning_logs/
+model/wandb/
+tiktok_patcher.py
+
 
 # Spyder project settings
 .spyderproject
