@@ -1,0 +1,46 @@
+Evaluation Results
+==================
+
+Timestamp: 2025-07-29 17:36:56
+Model Checkpoint: C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/model/lightning_logs/checkpoints/best-checkpoint-epoch=09-val_loss=0.6207.ckpt
+Device: cuda
+Test Set Size: 6590 samples
+Number of Classes: 12
+
+Test Accuracy: 0.7033
+
+Classification Report:
+================================================================================
+                   precision    recall  f1-score   support
+
+           BENIGN       0.88      0.99      0.93       514
+        DDoS-HOIC       0.69      0.49      0.57       572
+    DDoS-LOIC-UDP       0.42      0.63      0.51       549
+   DDoS-LOIC-HTTP       0.28      0.07      0.11       563
+DDoS-SlowHTTPTest       0.95      0.69      0.80       521
+   DDoS-Slowloris       0.87      0.93      0.90       605
+        DDoS-Hulk       0.97      1.00      0.99       565
+   DDoS-GoldenEye       0.54      0.88      0.67       498
+      Brute Force       0.50      0.46      0.48       546
+    SQL Injection       0.89      0.84      0.87       529
+              XSS       0.85      0.91      0.88       549
+           Botnet       0.53      0.60      0.56       579
+
+         accuracy                           0.70      6590
+        macro avg       0.70      0.71      0.69      6590
+     weighted avg       0.70      0.70      0.69      6590
+
+
+Class Names Used:
+Class 0: BENIGN
+Class 1: DDoS-HOIC
+Class 2: DDoS-LOIC-UDP
+Class 3: DDoS-LOIC-HTTP
+Class 4: DDoS-SlowHTTPTest
+Class 5: DDoS-Slowloris
+Class 6: DDoS-Hulk
+Class 7: DDoS-GoldenEye
+Class 8: Brute Force
+Class 9: SQL Injection
+Class 10: XSS
+Class 11: Botnet
