@@ -18,7 +18,6 @@ class TransformerClassifier(pl.LightningModule):
         lr = float(config['training']['learning_rate'])
         self.max_epochs = int(config['training']['epochs'])
 
-
         # Dropout layer
         self.dropout = nn.Dropout(dropout)
 
@@ -27,6 +26,11 @@ class TransformerClassifier(pl.LightningModule):
 
         # Embed scalar features
         self.feature_embedding = nn.Linear(1, embed_dim)
+
+        # Protocol Embedding
+        self.num_protocols = 18  # max(protocol_id) + 1 — you can tune this
+        self.protocol_embed_dim = embed_dim  # or use smaller dim if you like
+        self.protocol_embedding = nn.Embedding(self.num_protocols, int(self.protocol_embed_dim))
 
         # Transformer Encoder
         encoder_layer = nn.TransformerEncoderLayer(
@@ -40,7 +44,8 @@ class TransformerClassifier(pl.LightningModule):
 
         # Classification head (after mean pooling)
         self.classifier = nn.Sequential(
-            nn.Linear(embed_dim, embed_dim),
+            # nn.Linear(embed_dim, embed_dim),
+            nn.Linear(embed_dim + self.protocol_embed_dim, embed_dim),  # embed_dim + protocol_embed_dim
             nn.LayerNorm(embed_dim),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -52,23 +57,41 @@ class TransformerClassifier(pl.LightningModule):
         self.criterion = nn.CrossEntropyLoss()
         self.lr = lr
 
-    def forward(self, x):
+    def forward(self, x, protocol_ids):
+        assert protocol_ids.max() < self.num_protocols, "Protocol ID exceeds num_protocols"
+        assert protocol_ids.min() >= 0, "Protocol ID less than 0"
+
         # Input: (batch, num_features)
-        x = x.unsqueeze(-1)  # -> (batch, num_features, 1)
-        x = self.feature_embedding(x)  # -> (batch, num_features, embed_dim)
-        x = self.pos_encoder(x)        # -> (batch, num_features, embed_dim)
+        x = x.unsqueeze(-1)  # (batch, num_features, 1)
+        x = self.feature_embedding(x)  # (batch, num_features, embed_dim)
+
+        # # Get protocol embedding and expand to match sequence length
+        # protocol_embed = self.protocol_embedding(protocol_ids)  # (batch, embed_dim)
+        # protocol_embed = protocol_embed.unsqueeze(1).expand(-1, x.size(1), -1)  # (batch, num_features, embed_dim)
+        #
+        # # Combine feature + protocol embeddings
+        # x = x + protocol_embed  # broadcast addition
+
+        x = self.pos_encoder(x)        # (batch, num_features, embed_dim)
         x = self.dropout(x)
-        x = self.transformer(x)        # -> (batch, num_features, embed_dim)
+        x = self.transformer(x)        # (batch, num_features, embed_dim)
 
         # Mean pooling across sequence (dim=1)
-        x = x.mean(dim=1)  # -> (batch, embed_dim)
+        # x = x.mean(dim=1)  # (batch, embed_dim)
 
-        logits = self.classifier(x)  # -> (batch, num_classes)
+        # Max pooling across sequence (dim=1)
+        x = x.max(dim=1)[0]
+
+        # Get protocol embedding and concatenate
+        protocol_embed = self.protocol_embedding(protocol_ids)  # (batch, protocol_embed_dim)
+        x = torch.cat([x, protocol_embed], dim=1)  # (batch, embed_dim + protocol_embed_dim)
+
+        logits = self.classifier(x)  # (batch, num_classes)
         return logits
 
     def training_step(self, batch, batch_idx):
-        features, labels = batch
-        logits = self(features)
+        features, protocol_ids,labels = batch
+        logits = self(features, protocol_ids)
         loss = self.criterion(logits, labels)
         self.log("train_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
         self.train_acc(logits, labels)
@@ -76,8 +99,8 @@ class TransformerClassifier(pl.LightningModule):
         return loss
 
     def validation_step(self, batch, batch_idx):
-        features, labels = batch
-        logits = self(features)
+        features, protocol_ids, labels = batch
+        logits = self(features, protocol_ids)
         loss = self.criterion(logits, labels)
         self.log("val_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
         self.val_acc(logits, labels)
@@ -101,7 +124,6 @@ class TransformerClassifier(pl.LightningModule):
                 "monitor": "val_loss",
             },
         }
-
 
 class PositionalEncoding(nn.Module):
     def __init__(self, embed_dim, max_len=128):

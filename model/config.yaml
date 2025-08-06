@@ -6,19 +6,18 @@ data:
   test_fraction: 0.1
 
 model:
-  embed_dim: 128                    # Bigger embedding space for better representation
-  num_heads: 8                      # More heads for capturing diverse attention patterns
-  num_layers: 4                     # Slightly deeper transformer
-  ffn_dim: 256                      # Larger feedforward network
-  dropout: 0.3                      # Increased dropout to reduce overfitting
+  embed_dim: 128
+  num_heads: 8
+  num_layers: 4
+  ffn_dim: 256
+  dropout: 0.3
   num_classes: 12
 
 training:
-  batch_size: 128                   # Larger batch size for better gradient estimates
-  learning_rate: 1e-4               # Higher LR for faster convergence (adjustable)
-  epochs: 30                        # Give the model more time to learn
-  gpus: 1                           # Use GPU if available
-
+  batch_size: 128
+  learning_rate: 1e-4
+  epochs: 30
+  gpus: 1
 
 early_stopping:
   monitor: val_loss

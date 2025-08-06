@@ -18,3 +18,4 @@ pytorch-lightning
 tensorboard
 wandb
 uv
+xgboost

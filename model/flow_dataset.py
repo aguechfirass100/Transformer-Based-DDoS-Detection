@@ -17,21 +17,29 @@ class FlowDataset(Dataset):
 
     def __getitem__(self, idx):
         row = self.df.iloc[idx]
-        # Extract features
-        # (Numerical features are floats; categorical are already encoded as ints)
+
+        # Extract protocol ID
+        protocol = int(row["Protocol"])
+        protocol = torch.tensor(protocol, dtype=torch.long)
+
+        # Remove "Protocol" from numeric features
+        numeric_feats = [f for f in self.num_feats if f != "Protocol"]
+
         features = []
-        if self.num_feats:
-            features.append(row[self.num_feats].values.astype(float))
+        if numeric_feats:
+            features.append(row[numeric_feats].values.astype(float))
         if self.cat_feats:
             features.append(row[self.cat_feats].values.astype(float))
-        # Combine numeric and categorical (as floats) into one feature array
+
+        # Combine all features
         if features:
             features = torch.tensor(np.concatenate(features), dtype=torch.float32)
         else:
             features = torch.tensor([], dtype=torch.float32)
 
         label = torch.tensor(int(row[self.label_col]), dtype=torch.long)
-        return features, label
+
+        return features, protocol, label
 
 
 class FlowDataModule(pl.LightningDataModule):
@@ -53,7 +61,7 @@ class FlowDataModule(pl.LightningDataModule):
     def setup(self, stage=None):
         df = pd.read_parquet(self.data_file)
 
-        self.num_feats = [col for col in df.columns if col != self.label_col]
+        self.num_feats = [col for col in df.columns if col not in [self.label_col, "Protocol"]]
 
         self.cat_feats = []
 
@@ -74,7 +82,6 @@ class FlowDataModule(pl.LightningDataModule):
         train_df = df.iloc[:n_train].reset_index(drop=True)
         val_df = df.iloc[n_train:n_train + n_val].reset_index(drop=True)
         test_df = df.iloc[n_train + n_val:].reset_index(drop=True)
-
 
         scaler = StandardScaler()
         train_df[self.num_feats] = scaler.fit_transform(train_df[self.num_feats])

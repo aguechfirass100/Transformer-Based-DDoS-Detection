@@ -37,10 +37,16 @@ def evaluate_model(model, test_loader, device='cuda' if torch.cuda.is_available(
 
     with torch.no_grad():
         for batch in test_loader:
-            features, labels = batch
-            features, labels = features.to(device), labels.to(device)
 
-            outputs = model(features)
+            if len(batch) == 3:
+                features, protocol, labels = batch
+                features = features.to(device)
+                protocol = protocol.to(device)
+                labels = labels.to(device)
+                outputs = model(features, protocol)
+            else:
+                raise ValueError(f"Expected 3 elements in batch (features, protocol, labels), got {len(batch)}")
+
             probs = torch.softmax(outputs, dim=1)
             preds = torch.argmax(outputs, dim=1)
 
@@ -142,7 +148,7 @@ def main():
     checkpoint_dir = "model/lightning_logs/checkpoints"
     try:
         # Try to use the specific checkpoint first
-        checkpoint_path = "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/model/lightning_logs/checkpoints/best-checkpoint-epoch=13-val_loss=0.7482.ckpt"
+        checkpoint_path = "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/model/lightning_logs/checkpoints/best-checkpoint-epoch=14-val_loss=0.6970.ckpt"
         if not Path(checkpoint_path).exists():
             print(f"Specific checkpoint not found, looking for latest in {checkpoint_dir}")
             checkpoint_path = find_latest_checkpoint(checkpoint_dir)
