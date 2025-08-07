@@ -1,0 +1,13 @@
+class_name,class_id,binary_accuracy,top_feature,top_feature_importance,num_nonzero_features
+benign,0,1.0, Inbound,0.811272,45
+DrDoS_DNS,1,0.9913194444444444, act_data_pkt_fwd,0.20502853,54
+DrDoS_LDAP,2,0.9702777777777778, Average Packet Size,0.4872015,38
+DrDoS_MSSQL,3,0.9513541666666666, Average Packet Size,0.64882374,50
+DrDoS_NetBIOS,4,0.9947222222222222, Average Packet Size,0.62056303,22
+DrDoS_NTP,5,0.9971180555555555, act_data_pkt_fwd,0.6795175,55
+DrDoS_SNMP,6,0.9998611111111111, Fwd Packet Length Mean,0.43075097,20
+DrDoS_SSDP,7,0.9748958333333333, Min Packet Length,0.47535154,32
+DrDoS_UDP,8,0.963125, min_seg_size_forward,0.75449306,29
+Syn,9,0.99375, ACK Flag Count,0.8022934,34
+TFTP,10,0.9937152777777778, ACK Flag Count,0.8099938,42
+UDPLag,11,0.9640277777777778, min_seg_size_forward,0.28142247,36
