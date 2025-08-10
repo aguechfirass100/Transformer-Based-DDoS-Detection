@@ -1,0 +1,7 @@
+,xgb_global,xgb_benign,xgb_DrDoS_DNS,xgb_DrDoS_LDAP,xgb_DrDoS_MSSQL,xgb_DrDoS_NetBIOS,xgb_DrDoS_NTP,xgb_DrDoS_SNMP,xgb_DrDoS_SSDP,xgb_DrDoS_UDP,xgb_Syn,xgb_TFTP,xgb_UDPLag,paper_UDPLag,paper_TFTP,paper_WebDDoS,paper_DrDoS_DNS,paper_benign,paper_DrDoS_MSSQL,paper_DrDoS_LDAP,paper_DrDoS_NetBIOS,paper_DrDoS_NTP,paper_DrDoS_SSDP,paper_DrDoS_SNMP,paper_Syn,paper_DrDoS_UDP,xgb_weighted,paper_avg,combined_score,method_count,class_count,consistency_score,final_score,category,feature_name
+Fwd Avg Bytes/Bulk,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0.0,0.0,Bulk_Transfer,Fwd Avg Bytes/Bulk
+Fwd Avg Packets/Bulk,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0.0,0.0,Bulk_Transfer,Fwd Avg Packets/Bulk
+Fwd Avg Bulk Rate,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0.0,0.0,Bulk_Transfer,Fwd Avg Bulk Rate
+Bwd Avg Bytes/Bulk,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0.0,0.0,Bulk_Transfer,Bwd Avg Bytes/Bulk
+Bwd Avg Packets/Bulk,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0.0,0.0,Bulk_Transfer,Bwd Avg Packets/Bulk
+Bwd Avg Bulk Rate,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0.0,0.0,Bulk_Transfer,Bwd Avg Bulk Rate

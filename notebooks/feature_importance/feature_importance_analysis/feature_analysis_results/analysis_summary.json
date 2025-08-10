@@ -1,0 +1,22 @@
+{
+  "analysis_summary": {
+    "total_features_analyzed": 80,
+    "optimal_feature_count": 28,
+    "elbow_points": {
+      "0.8": 22,
+      "0.85": 25,
+      "0.9": 28,
+      "0.95": 31
+    }
+  },
+  "file_descriptions": {
+    "all_features_ranked_by_final_score.csv": "All features ranked by comprehensive final score",
+    "recommended_features_top_28.csv": "Recommended 28 features for optimal performance",
+    "high_importance_features_top_20.csv": "Top 20 most important features",
+    "consistent_features_top_30.csv": "Top 30 features with high consistency across classes",
+    "xgboost_specific_features_top_40.csv": "Top 40 features from XGBoost analysis",
+    "paper_specific_features.csv": "Features identified in the research paper",
+    "comprehensive_feature_importance_matrix.csv": "Complete analysis matrix with all scores",
+    "features_by_categories.csv": "Features organized by functional categories"
+  }
+}

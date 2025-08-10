@@ -1,0 +1,36 @@
+feature,status
+Unnamed: 0,no_high_correlations
+Source Port,no_high_correlations
+Destination Port,no_high_correlations
+Fwd Packet Length Std,no_high_correlations
+Bwd Packet Length Max,no_high_correlations
+Bwd Packet Length Min,no_high_correlations
+Flow Bytes/s,no_high_correlations
+Bwd IAT Total,no_high_correlations
+Bwd IAT Min,no_high_correlations
+Bwd PSH Flags,no_high_correlations
+Fwd URG Flags,no_high_correlations
+Bwd URG Flags,no_high_correlations
+Bwd Header Length,no_high_correlations
+Bwd Packets/s,no_high_correlations
+Max Packet Length,no_high_correlations
+FIN Flag Count,no_high_correlations
+SYN Flag Count,no_high_correlations
+PSH Flag Count,no_high_correlations
+URG Flag Count,no_high_correlations
+CWE Flag Count,no_high_correlations
+ECE Flag Count,no_high_correlations
+Down/Up Ratio,no_high_correlations
+Fwd Avg Bytes/Bulk,no_high_correlations
+Fwd Avg Packets/Bulk,no_high_correlations
+Fwd Avg Bulk Rate,no_high_correlations
+Bwd Avg Bytes/Bulk,no_high_correlations
+Bwd Avg Packets/Bulk,no_high_correlations
+Bwd Avg Bulk Rate,no_high_correlations
+Init_Win_bytes_forward,no_high_correlations
+Init_Win_bytes_backward,no_high_correlations
+min_seg_size_forward,no_high_correlations
+Active Std,no_high_correlations
+Active Max,no_high_correlations
+Idle Std,no_high_correlations
+Inbound,no_high_correlations

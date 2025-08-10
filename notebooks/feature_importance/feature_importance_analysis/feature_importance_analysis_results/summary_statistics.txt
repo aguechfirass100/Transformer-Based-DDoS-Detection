@@ -1,0 +1,7 @@
+total_features: 82
+significant_global_features: 15
+significant_class_features: 6
+num_classes: 12
+global_per_class_correlation: -0.03347671806925584
+mean_global_importance: 0.012195122530170733
+mean_per_class_importance: 0.0006253962567296748

@@ -1,0 +1,31 @@
+feature
+ACK Flag Count
+act_data_pkt_fwd
+Avg Fwd Segment Size
+Inbound
+Idle Std
+Packet Length Mean
+Fwd Packet Length Mean
+Average Packet Size
+Min Packet Length
+Fwd IAT Total
+Flow Bytes/s
+Init_Win_bytes_forward
+Max Packet Length
+URG Flag Count
+Fwd Packets/s
+Init_Win_bytes_backward
+Total Length of Fwd Packets
+min_seg_size_forward
+Fwd Packet Length Std
+Subflow Fwd Bytes
+Fwd Packet Length Min
+Source Port
+CWE Flag Count
+Unnamed: 0
+Subflow Fwd Packets
+Bwd Packet Length Min
+Active Mean
+Fwd Packet Length Max
+Total Fwd Packets
+Fwd IAT Min

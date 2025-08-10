@@ -1,0 +1,16 @@
+feature,benign,DrDoS_DNS,DrDoS_LDAP,DrDoS_MSSQL,DrDoS_NetBIOS,DrDoS_NTP,DrDoS_SNMP,DrDoS_SSDP,DrDoS_UDP,Syn,TFTP,UDPLag
+ACK Flag Count,82,82,82,82,82,82,82,82,82,82,82,82
+act_data_pkt_fwd,82,82,82,82,82,82,82,82,82,82,82,82
+Avg Fwd Segment Size,82,82,82,82,82,82,82,82,82,82,82,82
+Inbound,82,82,82,82,82,82,82,82,82,82,82,82
+Idle Std,82,82,82,82,82,82,82,82,82,82,82,82
+Packet Length Mean,82,82,82,82,82,82,82,82,82,82,82,82
+Fwd Packet Length Mean,82,82,82,82,82,82,82,82,82,82,82,82
+Average Packet Size,82,82,82,82,82,82,82,82,82,82,82,82
+Min Packet Length,82,82,82,82,82,82,82,82,82,82,82,82
+Max Packet Length,82,82,82,82,82,82,82,82,82,82,82,82
+URG Flag Count,82,82,82,82,82,82,82,82,82,82,82,82
+Init_Win_bytes_forward,7,35,27,33,70,15,70,21,70,7,3,70
+Init_Win_bytes_backward,82,82,82,82,82,82,82,82,82,82,82,82
+Fwd IAT Total,42,5,5,32,49,2,47,15,15,19,24,20
+min_seg_size_forward,82,82,82,82,82,82,82,82,82,82,82,82

@@ -1,0 +1,69 @@
+CORRELATION ANALYSIS SUMMARY
+==================================================
+
+Total Features: 82
+Correlation Threshold: 0.85
+Highly Correlated Pairs: 96
+Correlation Groups: 14
+Features In Groups: 47
+Singleton Features: 35
+Largest Group Size: 9
+
+CORRELATION GROUPS DETAILS:
+------------------------------
+
+Group_25: 2 features
+  Average correlation: 0.850
+  Features: Protocol, ACK Flag Count
+
+Group_19: 9 features
+  Average correlation: 0.920
+  Features: Flow Duration, Flow IAT Mean, Flow IAT Std, Flow IAT Max, Fwd IAT Total, Fwd IAT Mean, Fwd IAT Std, Fwd IAT Max, Idle Max
+
+Group_7: 2 features
+  Average correlation: 1.000
+  Features: Total Fwd Packets, Subflow Fwd Packets
+
+Group_10: 5 features
+  Average correlation: 0.922
+  Features: Total Backward Packets, Total Length of Bwd Packets, Packet Length Variance, Subflow Bwd Packets, Subflow Bwd Bytes
+
+Group_14: 3 features
+  Average correlation: 0.998
+  Features: Total Length of Fwd Packets, Subflow Fwd Bytes, act_data_pkt_fwd
+
+Group_21: 7 features
+  Average correlation: 0.992
+  Features: Fwd Packet Length Max, Fwd Packet Length Min, Fwd Packet Length Mean, Min Packet Length, Packet Length Mean, Average Packet Size, Avg Fwd Segment Size
+
+Group_11: 4 features
+  Average correlation: 0.925
+  Features: Bwd Packet Length Mean, Bwd Packet Length Std, Packet Length Std, Avg Bwd Segment Size
+
+Group_15: 2 features
+  Average correlation: 0.983
+  Features: Flow Packets/s, Fwd Packets/s
+
+Group_3: 2 features
+  Average correlation: 1.000
+  Features: Flow IAT Min, Fwd IAT Min
+
+Group_16: 3 features
+  Average correlation: 0.937
+  Features: Bwd IAT Mean, Bwd IAT Std, Bwd IAT Max
+
+Group_28: 2 features
+  Average correlation: 1.000
+  Features: Fwd PSH Flags, RST Flag Count
+
+Group_4: 2 features
+  Average correlation: 1.000
+  Features: Fwd Header Length, Fwd Header Length.1
+
+Group_6: 2 features
+  Average correlation: 0.942
+  Features: Active Mean, Active Min
+
+Group_18: 2 features
+  Average correlation: 0.966
+  Features: Idle Mean, Idle Min

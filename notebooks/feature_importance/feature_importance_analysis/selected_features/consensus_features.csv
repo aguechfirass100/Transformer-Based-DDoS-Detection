@@ -1,0 +1,47 @@
+feature
+Flow Bytes/s
+ Protocol
+ Average Packet Size
+ Destination Port
+Fwd Packet Length Std
+ Source Port
+ Fwd Packet Length Mean
+Avg Fwd Segment Size
+ Idle Min
+Fwd Packet Length Mean
+Active Mean
+Idle Std
+ Max Packet Length
+Inbound
+ Min Packet Length
+ Flow Duration
+Init_Win_bytes_backward
+URG Flag Count
+Fwd IAT Total
+Total Length of Fwd Packets
+ min_seg_size_forward
+ Flow Packets/s
+ Fwd Header Length
+Packet Length Mean
+ Packet Length Mean
+ Fwd Packet Length Min
+ Fwd IAT Mean
+ Flow IAT Mean
+min_seg_size_forward
+ Inbound
+ACK Flag Count
+Min Packet Length
+Fwd Packets/s
+ Fwd IAT Min
+ Fwd IAT Std
+Init_Win_bytes_forward
+ ACK Flag Count
+act_data_pkt_fwd
+Subflow Fwd Bytes
+Max Packet Length
+ Fwd Packet Length Max
+ act_data_pkt_fwd
+Fwd Packet Length Min
+Average Packet Size
+ Flow IAT Min
+ Flow IAT Max

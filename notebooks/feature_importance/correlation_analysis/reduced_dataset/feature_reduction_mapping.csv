@@ -1,0 +1,55 @@
+group,kept_feature,dropped_features,reason
+Group_7,Total Fwd Packets,Subflow Fwd Packets,correlation_group_representative
+Group_3,Flow IAT Min,Fwd IAT Min,correlation_group_representative
+Group_28,Fwd PSH Flags,RST Flag Count,correlation_group_representative
+Group_4,Fwd Header Length,Fwd Header Length.1,correlation_group_representative
+Group_14,Total Length of Fwd Packets,"Subflow Fwd Bytes, act_data_pkt_fwd",correlation_group_representative
+Group_21,Packet Length Mean,"Fwd Packet Length Max, Fwd Packet Length Min, Fwd Packet Length Mean, Min Packet Length, Average Packet Size, Avg Fwd Segment Size",correlation_group_representative
+Group_15,Flow Packets/s,Fwd Packets/s,correlation_group_representative
+Group_19,Flow Duration,"Flow IAT Mean, Flow IAT Std, Flow IAT Max, Fwd IAT Total, Fwd IAT Mean, Fwd IAT Std, Fwd IAT Max, Idle Max",correlation_group_representative
+Group_10,Total Backward Packets,"Total Length of Bwd Packets, Packet Length Variance, Subflow Bwd Packets, Subflow Bwd Bytes",correlation_group_representative
+Group_11,Packet Length Std,"Bwd Packet Length Mean, Bwd Packet Length Std, Avg Bwd Segment Size",correlation_group_representative
+Group_16,Bwd IAT Mean,"Bwd IAT Std, Bwd IAT Max",correlation_group_representative
+Group_25,Protocol,ACK Flag Count,correlation_group_representative
+Group_6,Active Mean,Active Min,correlation_group_representative
+Group_18,Idle Mean,Idle Min,correlation_group_representative
+singleton,Unnamed: 0,none,no_high_correlations
+singleton,Flow ID,none,no_high_correlations
+singleton,Source IP,none,no_high_correlations
+singleton,Source Port,none,no_high_correlations
+singleton,Destination IP,none,no_high_correlations
+singleton,Destination Port,none,no_high_correlations
+singleton,Timestamp,none,no_high_correlations
+singleton,Fwd Packet Length Std,none,no_high_correlations
+singleton,Bwd Packet Length Max,none,no_high_correlations
+singleton,Bwd Packet Length Min,none,no_high_correlations
+singleton,Flow Bytes/s,none,no_high_correlations
+singleton,Bwd IAT Total,none,no_high_correlations
+singleton,Bwd IAT Min,none,no_high_correlations
+singleton,Bwd PSH Flags,none,no_high_correlations
+singleton,Fwd URG Flags,none,no_high_correlations
+singleton,Bwd URG Flags,none,no_high_correlations
+singleton,Bwd Header Length,none,no_high_correlations
+singleton,Bwd Packets/s,none,no_high_correlations
+singleton,Max Packet Length,none,no_high_correlations
+singleton,FIN Flag Count,none,no_high_correlations
+singleton,SYN Flag Count,none,no_high_correlations
+singleton,PSH Flag Count,none,no_high_correlations
+singleton,URG Flag Count,none,no_high_correlations
+singleton,CWE Flag Count,none,no_high_correlations
+singleton,ECE Flag Count,none,no_high_correlations
+singleton,Down/Up Ratio,none,no_high_correlations
+singleton,Fwd Avg Bytes/Bulk,none,no_high_correlations
+singleton,Fwd Avg Packets/Bulk,none,no_high_correlations
+singleton,Fwd Avg Bulk Rate,none,no_high_correlations
+singleton,Bwd Avg Bytes/Bulk,none,no_high_correlations
+singleton,Bwd Avg Packets/Bulk,none,no_high_correlations
+singleton,Bwd Avg Bulk Rate,none,no_high_correlations
+singleton,Init_Win_bytes_forward,none,no_high_correlations
+singleton,Init_Win_bytes_backward,none,no_high_correlations
+singleton,min_seg_size_forward,none,no_high_correlations
+singleton,Active Std,none,no_high_correlations
+singleton,Active Max,none,no_high_correlations
+singleton,Idle Std,none,no_high_correlations
+singleton,SimillarHTTP,none,no_high_correlations
+singleton,Inbound,none,no_high_correlations
