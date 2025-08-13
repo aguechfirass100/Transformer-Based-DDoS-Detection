@@ -1,0 +1,28 @@
+data:
+#  data_file: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/data/subset/01-12/flow-level/combined_subset.parquet"
+  data_file: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/notebooks/processed_dataset_ready_for_transformer.parquet"
+  label_column: "Label"
+  train_fraction: 0.8
+  val_fraction: 0.1
+  test_fraction: 0.1
+
+model:
+  embed_dim: 128
+  num_heads: 8
+  num_layers: 5
+  ffn_dim: 256
+  dropout: 0.3
+  num_classes: 12
+
+training:
+  batch_size: 128
+  learning_rate: 1e-4
+  epochs: 30
+  gpus: 1
+
+early_stopping:
+  monitor: val_loss
+  patience: 5
+  mode: min
+
+output_dir: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_basic/lightning_logs"

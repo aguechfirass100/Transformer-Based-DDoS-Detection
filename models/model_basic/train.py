@@ -10,7 +10,7 @@ from model import TransformerClassifier
 
 def main():
     # Load config
-    with open('config.yaml', 'r') as f:
+    with open('config/config.yaml', 'r') as f:
         config = yaml.safe_load(f)
 
     # Set seed

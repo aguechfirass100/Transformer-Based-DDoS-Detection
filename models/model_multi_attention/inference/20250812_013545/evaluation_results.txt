@@ -1,0 +1,46 @@
+Evaluation Results
+==================
+
+Timestamp: 2025-08-12 01:35:52
+Model Checkpoint: C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_multi_attention/lightning_logs/checkpoints/best-checkpoint-epoch=27-val_loss=0.4953.ckpt
+Device: cuda
+Test Set Size: 14400 samples
+Number of Classes: 12
+
+Test Accuracy: 0.7428
+
+Classification Report:
+================================================================================
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00      1242
+           1       0.64      0.51      0.57      1213
+           2       0.45      0.67      0.54      1195
+           3       0.53      0.05      0.10      1199
+           4       0.94      0.84      0.89      1141
+           5       0.87      0.97      0.91      1182
+           6       1.00      1.00      1.00      1183
+           7       0.59      0.93      0.73      1227
+           8       0.51      0.96      0.67      1189
+           9       0.96      0.93      0.94      1177
+          10       0.93      0.96      0.95      1200
+          11       0.76      0.11      0.20      1252
+
+    accuracy                           0.74     14400
+   macro avg       0.76      0.75      0.71     14400
+weighted avg       0.76      0.74      0.70     14400
+
+
+Class Names Used:
+Class 0: 0
+Class 1: 1
+Class 2: 2
+Class 3: 3
+Class 4: 4
+Class 5: 5
+Class 6: 6
+Class 7: 7
+Class 8: 8
+Class 9: 9
+Class 10: 10
+Class 11: 11

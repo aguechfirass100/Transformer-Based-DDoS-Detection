@@ -14,7 +14,7 @@ def create_inference_folder():
     """
     Create a timestamped folder for saving inference results
     """
-    base_path = Path("C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/model/inference")
+    base_path = Path("/models/model_basic/inference")
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     inference_folder = base_path / timestamp
 
@@ -137,7 +137,7 @@ def find_latest_checkpoint(checkpoint_dir):
 
 def main():
     # Load config
-    config_path = Path('config.yaml')
+    config_path = Path('config/config.yaml')
     if not config_path.exists():
         raise FileNotFoundError("config.yaml not found")
 
@@ -145,10 +145,10 @@ def main():
         config = yaml.safe_load(f)
 
     # Find checkpoint - either use specific path or find latest
-    checkpoint_dir = "model/lightning_logs/checkpoints"
+    checkpoint_dir = "model_basic/lightning_logs/checkpoints"
     try:
         # Try to use the specific checkpoint first
-        checkpoint_path = "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/model/lightning_logs/checkpoints/best-checkpoint-epoch=14-val_loss=0.6970.ckpt"
+        checkpoint_path = "/models/model_basic/lightning_logs/checkpoints/best-checkpoint-epoch=09-val_loss=0.1684.ckpt"
         if not Path(checkpoint_path).exists():
             print(f"Specific checkpoint not found, looking for latest in {checkpoint_dir}")
             checkpoint_path = find_latest_checkpoint(checkpoint_dir)

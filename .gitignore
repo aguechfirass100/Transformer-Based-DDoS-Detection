@@ -145,8 +145,10 @@ env.bak/
 venv.bak/
 data/
 CSV-01-12.zip
-model/lightning_logs/
-model/wandb/
+models/model_basic/lightning_logs/
+models/model_basic/wandb/
+models/model_multi_attention/lightning_logs/
+models/model_multi_attention/wandb/
 tiktok_patcher.py
 
 
