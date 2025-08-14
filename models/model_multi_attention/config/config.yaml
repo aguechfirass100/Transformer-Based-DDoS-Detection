@@ -1,102 +1,153 @@
 data:
-  data_file: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/notebooks/processed_dataset_ready_for_transformer.parquet"
+#  data_file: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/notebooks/processed_dataset_ready_for_transformer.parquet"
+  data_file: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/notebooks/data_20k.parquet"
   label_column: "Label"
-  train_fraction: 0.7   # Slightly more training data
-  val_fraction: 0.2     # More validation for better monitoring
+  train_fraction: 0.8
+  val_fraction: 0.1
   test_fraction: 0.1
 
 model:
-  embed_dim: 128        # Smaller but sufficient
-  num_heads: 8          # Balanced attention heads
-  num_layers: 4         # Lighter architecture
-  ffn_dim: 256          # 2x embed_dim
-  dropout: 0.2          # Moderate regularization
+  embed_dim: 256
+  num_heads: 8
+  num_layers: 4
+  ffn_dim: 1024
+  dropout: 0.25
   num_classes: 12
 
 training:
-  batch_size: 256       # Larger batch for stable gradients
-  learning_rate: 3e-4   # Moderate learning rate
-  epochs: 40            # Sufficient epochs
+  batch_size: 64
+  learning_rate: 5e-5
+  epochs: 40
   gpus: 1
   gradient_clip_val: 1.0
-  accumulate_grad_batches: 1
+  accumulate_grad_batches: 4
 
 early_stopping:
   monitor: val_f1
-  patience: 8           # Reasonable patience
+  patience: 8
   mode: max
   min_delta: 0.001
 
-# Improved scheduler settings
 scheduler:
   type: "cosine_warm_restarts"
   T_0: 10
   T_mult: 2
   eta_min_factor: 0.01
 
-# Data augmentation (to be implemented in dataset)
 augmentation:
-  noise_factor: 0.02    # Add small amount of noise
-  feature_dropout: 0.1  # Randomly drop features during training
-  mixup_alpha: 0.2      # Mixup augmentation
+  noise_factor: 0.02
+  feature_dropout: 0.1
+  mixup_alpha: 0.2
 
 output_dir: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_multi_attention/lightning_logs"
 
-# Improved feature groups with better organization
+
 feature_groups:
   temporal:
-    - "Flow Duration"
-    - "Flow IAT Min"
-    - "Bwd IAT Total"
-    - "Bwd IAT Mean"
-    - "Bwd IAT Min"
-    - "Active Mean"
-    - "Active Std"
-    - "Active Max"
-    - "Idle Mean"
-    - "Idle Std"
+    - "FlowDuration"
+    - "FlowIATStd"
+    - "FwdIATMax"
+    - "FlowIATMin"
+    - "BwdIATStd"
+    - "BwdIATMax"
+    - "ActiveMean"
+    - "ActiveMin"
+    - "IdleMean"
+    - "IdleMin"
 
   spatial:
-    - "Source IP"
-    - "Source Port"
-    - "Destination IP"
-    - "Destination Port"
+    - "SourceIP"
+    - "SourcePort"
+    - "DestinationIP"
+    - "DestinationPort"
+    - "Down/UpRatio"
+    - "Init_Win_bytes_forward"
+    - "Init_Win_bytes_backward"
+    - "SubflowFwdPackets"
+    - "SubflowBwdPackets"
+    - "SubflowBwdBytes"
 
   protocol:
     - "Protocol"
-    - "Flow Bytes/s"
-    - "Flow Packets/s"
-    - "Fwd PSH Flags"
-    - "Bwd PSH Flags"
+    - "ACKFlagCount"
+    - "FwdPSHFlags"
+    - "RSTFlagCount"
+    - "FwdURGFlags"
+    - "BwdURGFlags"
+    - "FwdHeaderLength"
+    - "BwdHeaderLength"
+    - "min_seg_size_forward"
+    - "FlowPackets/s"
 
   statistical:
-    - "Total Fwd Packets"
-    - "Total Backward Packets"
-    - "Fwd Packet Length Std"
-    - "Bwd Packet Length Max"
-    - "Fwd URG Flags"
-    - "Bwd URG Flags"
-    - "Fwd Header Length"
-    - "Bwd Header Length"
-    - "Bwd Packets/s"
-    - "Max Packet Length"
-    - "Packet Length Mean"
-    - "FIN Flag Count"
-    - "SYN Flag Count"
-    - "PSH Flag Count"
-    - "URG Flag Count"
-    - "CWE Flag Count"
-    - "ECE Flag Count"
-    - "Down/Up Ratio"
-    - "Fwd Avg Bytes/Bulk"
-    - "Fwd Avg Bulk Rate"
-    - "Bwd Avg Packets/Bulk"
-    - "Bwd Avg Bulk Rate"
-    - "Init_Win_bytes_forward"
-    - "Init_Win_bytes_backward"
-    - "min_seg_size_forward"
+    - "TotalBackwardPackets"
+    - "TotalLengthofBwdPackets"
+    - "FwdPacketLengthMean"
+    - "FwdPacketLengthStd"
+    - "BwdPacketLengthMean"
+    - "BwdPacketLengthStd"
+    - "PacketLengthVariance"
+    - "AveragePacketSize"
+    - "FlowBytes/s"
+    - "FwdAvgBytes/Bulk"
 
-# Advanced training settings
+
+
+
+#feature_groups:
+#  temporal:
+#    - "Flow Duration"
+#    - "Flow IAT Min"
+#    - "Bwd IAT Total"
+#    - "Bwd IAT Mean"
+#    - "Bwd IAT Min"
+#    - "Active Mean"
+#    - "Active Std"
+#    - "Active Max"
+#    - "Idle Mean"
+#    - "Idle Std"
+#
+#  spatial:
+#    - "Source IP"
+#    - "Source Port"
+#    - "Destination IP"
+#    - "Destination Port"
+#
+#  protocol:
+#    - "Protocol"
+#    - "Flow Bytes/s"
+#    - "Flow Packets/s"
+#    - "Fwd PSH Flags"
+#    - "Bwd PSH Flags"
+#
+#  statistical:
+#    - "Total Fwd Packets"
+#    - "Total Backward Packets"
+#    - "Fwd Packet Length Std"
+#    - "Bwd Packet Length Max"
+#    - "Fwd URG Flags"
+#    - "Bwd URG Flags"
+#    - "Fwd Header Length"
+#    - "Bwd Header Length"
+#    - "Bwd Packets/s"
+#    - "Max Packet Length"
+#    - "Packet Length Mean"
+#    - "FIN Flag Count"
+#    - "SYN Flag Count"
+#    - "PSH Flag Count"
+#    - "URG Flag Count"
+#    - "CWE Flag Count"
+#    - "ECE Flag Count"
+#    - "Down/Up Ratio"
+#    - "Fwd Avg Bytes/Bulk"
+#    - "Fwd Avg Bulk Rate"
+#    - "Bwd Avg Packets/Bulk"
+#    - "Bwd Avg Bulk Rate"
+#    - "Init_Win_bytes_forward"
+#    - "Init_Win_bytes_backward"
+#    - "min_seg_size_forward"
+
+
 advanced_training:
   use_swa: true          # Stochastic Weight Averaging
   swa_start_epoch: 30

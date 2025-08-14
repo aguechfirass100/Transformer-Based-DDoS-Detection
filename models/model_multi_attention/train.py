@@ -9,7 +9,7 @@ from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping, Learning
 from pytorch_lightning.loggers import TensorBoardLogger, WandbLogger
 
 from flow_dataset import FlowDataModule
-from model import MultiAttentionTransformer
+from model import SimplifiedMultiAttentionTransformer as MultiAttentionTransformer
 
 
 def main():
@@ -104,7 +104,7 @@ def main():
         gradient_clip_val=config['training'].get('gradient_clip_val', 1.0),
         accumulate_grad_batches=config['training'].get('accumulate_grad_batches', 1),
         precision=16,  # Use mixed precision for faster training
-        val_check_interval=0.5,  # Check validation twice per epoch
+        val_check_interval=1.0,  # Check validation twice per epoch
         log_every_n_steps=50,  # Log more frequently
         enable_progress_bar=True,
         enable_model_summary=True

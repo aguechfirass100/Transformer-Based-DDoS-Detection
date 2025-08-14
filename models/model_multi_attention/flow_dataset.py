@@ -5,6 +5,8 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
 
+from utils.feature_heatmap import feature_heatmap
+
 
 class FlowDataset(Dataset):
     def __init__(self, df, feature_groups, label_column):
@@ -74,6 +76,7 @@ class FlowDataModule(pl.LightningDataModule):
 
     def setup(self, stage=None):
         df = pd.read_parquet(self.data_file)
+        feature_heatmap(df, label_column=self.label_col)
         df = df.sample(frac=1, random_state=42).reset_index(drop=True)
 
         # Debug: Check original labels
