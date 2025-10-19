@@ -1,0 +1,26 @@
+Feature,Integrated_Gradients,Rank
+Timestamp,0.23276792,1.0
+Min Packet Length,0.014600158,2.0
+Average Packet Size,0.007562412,3.0
+Fwd Packet Length Min,0.005694733,4.0
+Fwd Packet Length Max,0.0031518633,5.0
+Fwd IAT Mean,0.0031303843,6.0
+Total Length of Fwd Packets,0.002995217,7.0
+Fwd Packets/s,0.002587274,8.0
+Flow Duration,0.0022294908,9.0
+Packet Length Std,0.0022104152,10.0
+Destination Port,0.002160932,11.0
+Max Packet Length,0.0020838114,12.0
+Fwd IAT Max,0.0017841208,13.0
+Flow IAT Max,0.0017546371,14.0
+Fwd IAT Total,0.0014801916,15.0
+min_seg_size_forward,0.0012240693,16.0
+Flow IAT Mean,0.0010086567,17.0
+Fwd Packet Length Std,0.0008855116,18.0
+Subflow Fwd Bytes,0.0008646247,19.0
+Fwd Header Length,0.00065524224,20.0
+ACK Flag Count,0.0005464996,21.0
+Init_Win_bytes_forward,0.00044921885,22.0
+Source IP,0.00022200683,23.0
+Destination IP,0.000118976604,24.0
+Flow IAT Min,0.00010457172,25.0

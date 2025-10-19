@@ -144,12 +144,20 @@ ENV/
 env.bak/
 venv.bak/
 data/
+models/model_main/data
+models/model_main_V2/data
+models/model_main_V2/checkpoints
+models/model_main_V3/checkpoints
+models/model_main_V3/logs
 CSV-01-12.zip
 models/model_basic/lightning_logs/
 models/model_basic/wandb/
 models/model_multi_attention/lightning_logs/
 models/model_multi_attention/wandb/
+models/model_main/lightning_logs/
+models/model_main/wandb/
 tiktok_patcher.py
+
 
 
 # Spyder project settings

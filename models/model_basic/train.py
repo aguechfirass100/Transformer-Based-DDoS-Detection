@@ -10,7 +10,8 @@ from model import TransformerClassifier
 
 def main():
     # Load config
-    with open('config/config.yaml', 'r') as f:
+    config_path = "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_basic/config/config.yaml"
+    with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
 
     # Set seed

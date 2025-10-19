@@ -1,0 +1,186 @@
+# Data Configuration
+data:
+  pkl_file_path: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_main/data/original_data/finale_12_classes/pruned/final_clean_data_2.pkl"
+  num_classes: 6
+  flow_features_dim: null  # Will be set automatically from data
+  packet_features_dim: null  # Will be set automatically from data
+  max_packets_per_flow: 100
+  flows_per_batch: 8
+
+# Model Architecture
+model:
+  # Embedding dimensions
+  packet_embed_dim: 32
+  protocol_embed_dim: 4
+  flow_context_dim: 64
+
+  # Implicit packet transformers
+  packet_implicit:
+    num_layers: 2
+    num_heads: 2
+    hidden_dim: 64
+    dropout: 0.2
+
+  # Explicit attention heads
+  explicit_heads:
+    head_dim: 32
+    num_heads: 4
+    use_feature_mapping: true
+
+  # Cross-flow attention
+  cross_attention:
+    num_layers: 1
+    num_heads: 2
+    hidden_dim: 64
+    dropout: 0.2
+
+  # Final classifier
+  classifier:
+    hidden_dim: 32
+    dropout: 0.4
+    final_dropout: 0.3
+
+# Training Configuration
+training:
+  batch_size: 32
+  learning_rate: 0.0005
+  weight_decay: 0.001
+  num_epochs: 5
+  warmup_epochs: 1
+  patience: 3
+  min_delta: 0.001
+
+  # Learning rate scheduler
+  scheduler:
+    type: "cosine"
+    step_size: 30
+    gamma: 0.1
+
+  # Class balancing
+  use_class_weights: true
+  focal_loss: true
+  focal_alpha: 0.25
+  focal_gamma: 2.0
+
+# Validation Configuration
+validation:
+  val_split: 0.2
+  stratify: true
+  random_state: 42
+
+# Hardware Configuration
+device:
+  use_cuda: true
+  num_workers: 2
+  pin_memory: true
+
+# Logging and Checkpoints
+logging:
+  log_interval: 5
+  save_dir: "./checkpoints"
+  experiment_name: "ddos_transformer_robust"
+  use_wandb: false
+
+# Data Preprocessing Options
+preprocessing:
+  remove_empty_features: true
+  use_robust_scaling: true
+  handle_class_imbalance: true
+  min_class_samples: 2
+
+  # Features to drop during preprocessing
+  features_to_drop:
+#    - "Flow ID"
+    - "Label"
+#    - "Source IP"
+#    - "Destination IP"
+
+  # Feature groups for explicit attention heads
+  attention_head_features:
+    temporal:
+      - "Timestamp"
+      - "Flow IAT Min"
+      - "Fwd IAT Mean"
+      - "Fwd IAT Max"
+      - "Flow IAT Max"
+      - "Flow IAT Mean"
+      - "Fwd IAT Total"
+      - "Flow Duration"
+
+    spatial:
+      - "Source IP"
+      - "Destination IP"
+      - "Destination Port"
+
+    protocol:
+      - "Protocol"
+      - "ACK Flag Count"
+
+    feature:
+      - "Max Packet Length"
+      - "Fwd Packets/s"
+      - "Fwd Packet Length Std"
+      - "Subflow Fwd Bytes"
+      - "min_seg_size_forward"
+      - "Packet Length Std"
+      - "Total Length of Fwd Packets"
+      - "Fwd Packet Length Max"
+      - "Init_Win_bytes_forward"
+      - "Fwd Header Length"
+      - "Fwd Packet Length Min"
+      - "Average Packet Size"
+      - "Min Packet Length"
+
+
+# Class names
+class_names:
+  - "DrDoS_DNS"
+  - "DrDoS_NTP"
+  - "DrDoS_NetBIOS"
+  - "TFTP"
+  - "DrDoS_LDAP"
+  - "DrDoS_SNMP"
+
+# Metrics to track
+metrics:
+  primary_metric: "f1_weighted"
+  track_per_class: true
+  confusion_matrix: true
+
+# Packet processing options
+packet_processing:
+  padding_strategy: "zero"
+  min_packets_per_flow: 1
+  remove_all_zero_packets: true
+  packet_feature_normalization: true
+
+
+
+# Model paths
+model_paths:
+  implicit_flow_model: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_basic/lightning_logs/checkpoints/best-checkpoint-epoch=22-val_loss=0.0032.ckpt"
+  explicit_packet_model: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_main_V2/checkpoints/explicit_packet/epoch=20-val_loss=1.78.ckpt"  # Will be created
+
+# Combined training configuration
+combined_training:
+  phase1_epochs: 10    # Train fusion only
+  phase2_epochs: 10   # Fine-tune explicit+packet + fusion
+  phase3_epochs: 10   # Full fine-tuning (optional)
+
+  phase1_lr: 0.001     # Higher LR for new fusion layers
+  phase2_lr: 0.0005    # Medium LR for fine-tuning
+  phase3_lr: 0.0001    # Lower LR for full fine-tuning
+
+# Training phases
+training_phases:
+  run_explicit_packet_first: true
+  run_phase1: true
+  run_phase2: true
+  run_phase3: true  # Set to true only if needed
+
+# Logging for different phases
+logging_phases:
+  explicit_packet_project: "ddos_explicit_packet"
+  phase1_project: "ddos_combined_phase1"
+  phase2_project: "ddos_combined_phase2"
+  phase3_project: "ddos_combined_phase3"

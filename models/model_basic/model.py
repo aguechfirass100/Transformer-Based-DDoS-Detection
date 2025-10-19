@@ -3,6 +3,51 @@ import torch.nn as nn
 import torch.nn.functional as F
 import pytorch_lightning as pl
 import torchmetrics
+from typing import Tuple, Dict, Optional, List  # ATTN: Added imports
+
+
+# ATTN: New module to replace nn.TransformerEncoder
+class CustomTransformerEncoder(nn.Module):
+    """
+    A custom TransformerEncoder that allows returning attention weights
+    from each layer. This replicates the one from the explicit model.
+    """
+
+    def __init__(self, encoder_layer, num_layers):
+        super().__init__()
+        # Create a list of encoder layers
+        self.layers = nn.ModuleList([encoder_layer for _ in range(num_layers)])
+        self.num_layers = num_layers
+
+    def forward(self, src, return_attn_weights: bool = False) -> Tuple[torch.Tensor, Optional[List[torch.Tensor]]]:
+        output = src
+        all_attn_weights = []
+
+        for layer in self.layers:
+            # Replicating the forward pass of nn.TransformerEncoderLayer
+            # to gain access to self_attn's weights.
+
+            # 1. Self-Attention
+            # We pass need_weights=return_attn_weights to the self_attn module
+            sa_out, attn_weights = layer.self_attn(
+                output, output, output, need_weights=return_attn_weights
+            )
+            output = output + layer.dropout1(sa_out)
+            output = layer.norm1(output)
+
+            # 2. Feed-Forward
+            ff_out = layer.linear2(layer.dropout(layer.activation(layer.linear1(output))))
+            output = output + layer.dropout2(ff_out)
+            output = layer.norm2(output)
+
+            if return_attn_weights:
+                all_attn_weights.append(attn_weights)
+
+        if return_attn_weights:
+            return output, all_attn_weights
+        else:
+            return output, None
+
 
 class TransformerClassifier(pl.LightningModule):
     def __init__(self, config):
@@ -32,15 +77,18 @@ class TransformerClassifier(pl.LightningModule):
         self.protocol_embed_dim = embed_dim  # or use smaller dim if you like
         self.protocol_embedding = nn.Embedding(self.num_protocols, int(self.protocol_embed_dim))
 
-        # Transformer Encoder
+        # ATTN: Replaced nn.TransformerEncoder with CustomTransformerEncoder
         encoder_layer = nn.TransformerEncoderLayer(
             d_model=embed_dim,
             nhead=num_heads,
             dim_feedforward=ffn_dim,
             dropout=dropout,
-            batch_first=True
+            batch_first=True,
+            activation='relu'  # ATTN: Explicitly added activation
         )
-        self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+        # self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+        self.transformer = CustomTransformerEncoder(encoder_layer, num_layers=num_layers)
+        # ATTN: End of replacement
 
         # Classification head (after mean pooling)
         self.classifier = nn.Sequential(
@@ -57,7 +105,8 @@ class TransformerClassifier(pl.LightningModule):
         self.criterion = nn.CrossEntropyLoss()
         self.lr = lr
 
-    def forward(self, x, protocol_ids):
+    # ATTN: Modified forward
+    def forward(self, x, protocol_ids, return_attn_weights: bool = False):
         assert protocol_ids.max() < self.num_protocols, "Protocol ID exceeds num_protocols"
         assert protocol_ids.min() >= 0, "Protocol ID less than 0"
 
@@ -65,19 +114,11 @@ class TransformerClassifier(pl.LightningModule):
         x = x.unsqueeze(-1)  # (batch, num_features, 1)
         x = self.feature_embedding(x)  # (batch, num_features, embed_dim)
 
-        # # Get protocol embedding and expand to match sequence length
-        # protocol_embed = self.protocol_embedding(protocol_ids)  # (batch, embed_dim)
-        # protocol_embed = protocol_embed.unsqueeze(1).expand(-1, x.size(1), -1)  # (batch, num_features, embed_dim)
-        #
-        # # Combine feature + protocol embeddings
-        # x = x + protocol_embed  # broadcast addition
-
-        x = self.pos_encoder(x)        # (batch, num_features, embed_dim)
+        x = self.pos_encoder(x)  # (batch, num_features, embed_dim)
         x = self.dropout(x)
-        x = self.transformer(x)        # (batch, num_features, embed_dim)
 
-        # Mean pooling across sequence (dim=1)
-        # x = x.mean(dim=1)  # (batch, embed_dim)
+        # ATTN: Capture weights from transformer
+        x, attn_weights = self.transformer(x, return_attn_weights=return_attn_weights)
 
         # Max pooling across sequence (dim=1)
         x = x.max(dim=1)[0]
@@ -87,10 +128,47 @@ class TransformerClassifier(pl.LightningModule):
         x = torch.cat([x, protocol_embed], dim=1)  # (batch, embed_dim + protocol_embed_dim)
 
         logits = self.classifier(x)  # (batch, num_classes)
-        return logits
+
+        # ATTN: Return weights if requested
+        if return_attn_weights:
+            attn_dict = {'transformer_encoder_layers': attn_weights}  # attn_weights is a list
+            return logits, attn_dict
+        else:
+            return logits
+
+    # ATTN: Modified get_representation
+    def get_representation(self, x, protocol_ids, return_attn_weights: bool = False):
+        """Get representation before final classification"""
+        assert protocol_ids.max() < self.num_protocols, "Protocol ID exceeds num_protocols"
+        assert protocol_ids.min() >= 0, "Protocol ID less than 0"
+
+        # Input: (batch, num_features)
+        x = x.unsqueeze(-1)  # (batch, num_features, 1)
+        x = self.feature_embedding(x)  # (batch, num_features, embed_dim)
+
+        x = self.pos_encoder(x)  # (batch, num_features, embed_dim)
+        x = self.dropout(x)
+
+        # ATTN: Capture weights from transformer
+        x, attn_weights = self.transformer(x, return_attn_weights=return_attn_weights)
+
+        # Max pooling across sequence (dim=1)
+        x = x.max(dim=1)[0]
+
+        # Get protocol embedding and concatenate
+        protocol_embed = self.protocol_embedding(protocol_ids)  # (batch, protocol_embed_dim)
+        representation = torch.cat([x, protocol_embed], dim=1)  # (batch, embed_dim + protocol_embed_dim)
+
+        # ATTN: Return weights if requested
+        if return_attn_weights:
+            attn_dict = {'transformer_encoder_layers': attn_weights}  # attn_weights is a list
+            return representation, attn_dict
+        else:
+            return representation, None
 
     def training_step(self, batch, batch_idx):
-        features, protocol_ids,labels = batch
+        features, protocol_ids, labels = batch
+        # ATTN: Call forward normally
         logits = self(features, protocol_ids)
         loss = self.criterion(logits, labels)
         self.log("train_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
@@ -100,14 +178,12 @@ class TransformerClassifier(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         features, protocol_ids, labels = batch
+        # ATTN: Call forward normally
         logits = self(features, protocol_ids)
         loss = self.criterion(logits, labels)
         self.log("val_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
         self.val_acc(logits, labels)
         self.log("val_acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True)
-
-    # def configure_optimizers(self):
-    #     return torch.optim.Adam(self.parameters(), lr=self.lr)
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr, weight_decay=1e-2)
@@ -125,7 +201,9 @@ class TransformerClassifier(pl.LightningModule):
             },
         }
 
+
 class PositionalEncoding(nn.Module):
+    # ... (This class is unchanged) ...
     def __init__(self, embed_dim, max_len=128):
         super().__init__()
         pe = torch.zeros(max_len, embed_dim)  # (max_len, embed_dim)

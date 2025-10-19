@@ -1,0 +1,174 @@
+# Hybrid Transformer Configuration File
+# Configuration for training the hybrid model combining implicit and explicit transformers
+
+# Data configuration
+data:
+  data_path: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/notebooks/IFT_data_ordered.parquet"
+  test_size: 0.1
+  val_size: 0.1
+
+# Feature groups for explicit model
+feature_groups:
+  temporal:
+    - "Timestamp"
+    - "Flow IAT Min"
+    - "Fwd IAT Mean"
+    - "Fwd IAT Max"
+    - "Flow IAT Max"
+    - "Flow IAT Mean"
+    - "Fwd IAT Total"
+    - "Flow Duration"
+
+  spatial:
+    - "Source IP"
+    - "Destination IP"
+    - "Destination Port"
+
+  protocol:
+    - "Protocol"
+    - "ACK Flag Count"
+
+  statistical:
+    - "Max Packet Length"
+    - "Fwd Packets/s"
+    - "Fwd Packet Length Std"
+    - "Subflow Fwd Bytes"
+    - "min_seg_size_forward"
+    - "Packet Length Std"
+    - "Total Length of Fwd Packets"
+    - "Fwd Packet Length Max"
+    - "Init_Win_bytes_forward"
+    - "Fwd Header Length"
+    - "Fwd Packet Length Min"
+    - "Average Packet Size"
+    - "Min Packet Length"
+
+# Model architecture configuration
+model:
+  # Will be set automatically based on dataset
+  num_classes: null  # Auto-detected from data
+  num_features: null  # Auto-detected from data
+
+  # Transformer architecture
+  embed_dim: 256
+  num_heads: 8
+  num_layers: 6
+  ff_dim: 1024
+  dropout: 0.1
+
+  # Protocol embedding
+  num_protocols: 18
+  protocol_embed_dim: 64
+
+  # Positional encoding
+  max_seq_len: 1000
+
+  feature_embed_dim: 256
+
+  attention_dropout: 0.1
+  cross_attention_heads: 4
+
+fusion:
+  method: "weighted_average"
+
+  implicit_weight: 0.3
+  explicit_weight: 0.7
+  learning_rate: 0.001
+  temperature: 1.0
+
+training:
+  epochs: 20
+  batch_size: 64
+  num_workers: 4
+  random_seed: 42
+
+  # Optimization
+  learning_rate: 1e-3
+  weight_decay: 1e-4
+  gradient_clip_val: 1.0
+  accumulate_grad_batches: 1
+
+  precision: 32
+
+  early_stopping_patience: 5
+
+  # Directories
+  checkpoint_dir: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_main_V3/checkpoints/hybrid"
+  log_dir: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_main_V3/logs"
+
+  # Scheduler configuration
+  scheduler:
+    name: "OneCycleLR"  # "OneCycleLR", "CosineAnnealing", "StepLR"
+    pct_start: 0.3
+    anneal_strategy: "cos"
+
+# Loss function configuration
+loss:
+  name: "CrossEntropyLoss"
+  label_smoothing: 0.1
+  class_weights: null  # Auto-computed if null, or provide list of weights
+
+# Regularization
+regularization:
+  dropout: 0.1
+  layer_dropout: 0.0  # Stochastic depth
+  weight_decay: 1e-4
+
+# Data augmentation (if applicable)
+augmentation:
+  enabled: false
+  noise_std: 0.01
+  feature_dropout: 0.0
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    - "accuracy"
+    - "f1_weighted"
+    - "f1_macro"
+    - "precision_weighted"
+    - "recall_weighted"
+
+  # Class names (will be auto-detected if not provided)
+  class_names: null
+
+# Hardware configuration
+hardware:
+  mixed_precision: false
+  compile_model: false  # PyTorch 2.0 model compilation
+
+# Logging configuration
+logging:
+  log_every_n_steps: 50
+  save_top_k: 3
+  monitor_metric: "val_acc"
+  monitor_mode: "max"
+
+# Hyperparameter search (optional)
+hyperparameter_search:
+  enabled: false
+  method: "random"  # "random", "grid", "bayesian"
+  n_trials: 20
+
+  # Parameter ranges for search
+  search_space:
+    learning_rate: [1e-4, 1e-2]
+    batch_size: [32, 64, 128]
+    embed_dim: [128, 256, 512]
+    num_heads: [4, 8, 16]
+    num_layers: [3, 6, 9]
+    dropout: [0.1, 0.3]
+    implicit_weight: [0.5, 0.8]
+
+# Model ensembling (optional)
+ensemble:
+  enabled: false
+  n_models: 5
+  voting_method: "soft"  # "soft", "hard"
+
+# Inference configuration
+inference:
+  batch_size: 128
+  threshold: 0.5
+  save_predictions: true
+  save_embeddings: false

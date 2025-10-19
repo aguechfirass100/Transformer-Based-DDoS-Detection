@@ -1,0 +1,86 @@
+================================================================================
+                          SHAP EXPLAINABILITY REPORT
+================================================================================
+
+Generated: 2025-10-18 23:32:45
+Sample Index: 5
+
+--------------------------------------------------------------------------------
+                          PREDICTION SUMMARY
+--------------------------------------------------------------------------------
+
+True Label: 5
+Predicted Label: 5
+Confidence: 92.08%
+Correct: ✓ YES
+
+--------------------------------------------------------------------------------
+                      TOP INFLUENTIAL FEATURES
+--------------------------------------------------------------------------------
+
+ 1.  Timestamp                          ↑ INCREASES prediction by 0.7957
+ 2.  Flow IAT Mean                       ↑ INCREASES prediction by 0.0528
+ 3.  Flow Duration                        ↑ INCREASES prediction by 0.0512
+ 4.  Fwd Packet Length Std               ↓ DECREASES prediction by 0.0314
+ 5.  Fwd IAT Mean                        ↑ INCREASES prediction by 0.0303
+ 6.  Fwd IAT Max                         ↓ DECREASES prediction by 0.0198
+ 7.  Fwd IAT Total                        ↑ INCREASES prediction by 0.0170
+ 8.  Packet Length Std                   ↓ DECREASES prediction by 0.0120
+ 9.  Subflow Fwd Bytes                    ↑ INCREASES prediction by 0.0105
+10.  Min Packet Length                    ↓ DECREASES prediction by 0.0085
+11.  Total Length of Fwd Packets          ↓ DECREASES prediction by 0.0084
+12.  Fwd Packet Length Max                ↑ INCREASES prediction by 0.0063
+13.  Fwd Packet Length Min                ↑ INCREASES prediction by 0.0054
+14.  Flow IAT Min                         ↑ INCREASES prediction by 0.0051
+15.  Fwd Packets/s                         ↑ INCREASES prediction by 0.0045
+
+--------------------------------------------------------------------------------
+                        FEATURE GROUP ANALYSIS
+--------------------------------------------------------------------------------
+
+TEMPORAL GROUP:
+  • Total Impact: 0.9745
+  • Average Impact: 0.1218
+  • Positive Impact: 0.9547
+  • Negative Impact: -0.0198
+  • Features: 8
+
+SPATIAL GROUP:
+  • Total Impact: 0.0031
+  • Average Impact: 0.0010
+  • Positive Impact: 0.0031
+  • Negative Impact: 0.0000
+  • Features: 3
+
+PROTOCOL GROUP:
+  • Total Impact: 0.0000
+  • Average Impact: 0.0000
+  • Positive Impact: 0.0000
+  • Negative Impact: 0.0000
+  • Features: 2
+
+STATISTICAL GROUP:
+  • Total Impact: 0.0942
+  • Average Impact: 0.0072
+  • Positive Impact: 0.0274
+  • Negative Impact: -0.0668
+  • Features: 13
+
+--------------------------------------------------------------------------------
+                        INTERPRETATION GUIDE
+--------------------------------------------------------------------------------
+
+• SHAP values represent each feature's contribution to the prediction
+• Positive values push the prediction toward the predicted class
+• Negative values push the prediction away from the predicted class
+• Larger absolute values indicate stronger influence
+
+--------------------------------------------------------------------------------
+                             KEY INSIGHTS
+--------------------------------------------------------------------------------
+
+• The TEMPORAL feature group has the strongest
+  influence on this prediction (0.9745 total impact)
+
+• The most influential feature is 'Timestamp'
+  with a SHAP value of 0.7957

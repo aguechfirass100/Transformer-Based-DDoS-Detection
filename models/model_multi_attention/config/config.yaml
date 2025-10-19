@@ -1,6 +1,8 @@
 data:
 #  data_file: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/notebooks/processed_dataset_ready_for_transformer.parquet"
-  data_file: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/notebooks/data_20k.parquet"
+#  data_file: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/notebooks/data_20k.parquet"
+#  data_file: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_main/data/original_data/finale_12_classes/pruned/final_clean_data_2.pkl"
+  data_file: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/notebooks/IFT_data_ordered.parquet"
   label_column: "Label"
   train_fraction: 0.8
   val_fraction: 0.1
@@ -44,108 +46,38 @@ output_dir: "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection
 
 feature_groups:
   temporal:
-    - "FlowDuration"
-    - "FlowIATStd"
-    - "FwdIATMax"
-    - "FlowIATMin"
-    - "BwdIATStd"
-    - "BwdIATMax"
-    - "ActiveMean"
-    - "ActiveMin"
-    - "IdleMean"
-    - "IdleMin"
+    - "Timestamp"
+    - "Flow IAT Min"
+    - "Fwd IAT Mean"
+    - "Fwd IAT Max"
+    - "Flow IAT Max"
+    - "Flow IAT Mean"
+    - "Fwd IAT Total"
+    - "Flow Duration"
 
   spatial:
-    - "SourceIP"
-    - "SourcePort"
-    - "DestinationIP"
-    - "DestinationPort"
-    - "Down/UpRatio"
-    - "Init_Win_bytes_forward"
-    - "Init_Win_bytes_backward"
-    - "SubflowFwdPackets"
-    - "SubflowBwdPackets"
-    - "SubflowBwdBytes"
+    - "Source IP"
+    - "Destination IP"
+    - "Destination Port"
 
   protocol:
     - "Protocol"
-    - "ACKFlagCount"
-    - "FwdPSHFlags"
-    - "RSTFlagCount"
-    - "FwdURGFlags"
-    - "BwdURGFlags"
-    - "FwdHeaderLength"
-    - "BwdHeaderLength"
-    - "min_seg_size_forward"
-    - "FlowPackets/s"
+    - "ACK Flag Count"
 
   statistical:
-    - "TotalBackwardPackets"
-    - "TotalLengthofBwdPackets"
-    - "FwdPacketLengthMean"
-    - "FwdPacketLengthStd"
-    - "BwdPacketLengthMean"
-    - "BwdPacketLengthStd"
-    - "PacketLengthVariance"
-    - "AveragePacketSize"
-    - "FlowBytes/s"
-    - "FwdAvgBytes/Bulk"
-
-
-
-
-#feature_groups:
-#  temporal:
-#    - "Flow Duration"
-#    - "Flow IAT Min"
-#    - "Bwd IAT Total"
-#    - "Bwd IAT Mean"
-#    - "Bwd IAT Min"
-#    - "Active Mean"
-#    - "Active Std"
-#    - "Active Max"
-#    - "Idle Mean"
-#    - "Idle Std"
-#
-#  spatial:
-#    - "Source IP"
-#    - "Source Port"
-#    - "Destination IP"
-#    - "Destination Port"
-#
-#  protocol:
-#    - "Protocol"
-#    - "Flow Bytes/s"
-#    - "Flow Packets/s"
-#    - "Fwd PSH Flags"
-#    - "Bwd PSH Flags"
-#
-#  statistical:
-#    - "Total Fwd Packets"
-#    - "Total Backward Packets"
-#    - "Fwd Packet Length Std"
-#    - "Bwd Packet Length Max"
-#    - "Fwd URG Flags"
-#    - "Bwd URG Flags"
-#    - "Fwd Header Length"
-#    - "Bwd Header Length"
-#    - "Bwd Packets/s"
-#    - "Max Packet Length"
-#    - "Packet Length Mean"
-#    - "FIN Flag Count"
-#    - "SYN Flag Count"
-#    - "PSH Flag Count"
-#    - "URG Flag Count"
-#    - "CWE Flag Count"
-#    - "ECE Flag Count"
-#    - "Down/Up Ratio"
-#    - "Fwd Avg Bytes/Bulk"
-#    - "Fwd Avg Bulk Rate"
-#    - "Bwd Avg Packets/Bulk"
-#    - "Bwd Avg Bulk Rate"
-#    - "Init_Win_bytes_forward"
-#    - "Init_Win_bytes_backward"
-#    - "min_seg_size_forward"
+    - "Max Packet Length"
+    - "Fwd Packets/s"
+    - "Fwd Packet Length Std"
+    - "Subflow Fwd Bytes"
+    - "min_seg_size_forward"
+    - "Packet Length Std"
+    - "Total Length of Fwd Packets"
+    - "Fwd Packet Length Max"
+    - "Init_Win_bytes_forward"
+    - "Fwd Header Length"
+    - "Fwd Packet Length Min"
+    - "Average Packet Size"
+    - "Min Packet Length"
 
 
 advanced_training:

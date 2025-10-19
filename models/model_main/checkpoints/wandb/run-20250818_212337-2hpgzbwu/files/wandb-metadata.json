@@ -1,0 +1,40 @@
+{
+  "os": "Windows-10-10.0.26100-SP0",
+  "python": "CPython 3.9.21",
+  "startedAt": "2025-08-18T20:23:37.302772Z",
+  "program": "C:\\Users\\AGFirass\\Documents\\GitHub\\Transformer-Based-DDoS-Detection\\models\\model_main\\train.py",
+  "codePath": "models\\model_main\\train.py",
+  "codePathLocal": "train.py",
+  "git": {
+    "remote": "git@github.com:aguechfirass100/Transformer-Based-DDoS-Detection.git",
+    "commit": "22ed5720d95c5cf5eeb6bd96b43966d5c157d935"
+  },
+  "email": "aguechfirass100@gmail.com",
+  "root": "./checkpoints",
+  "host": "AGF-Desktop",
+  "executable": "C:\\Users\\AGFirass\\Documents\\GitHub\\Transformer-Based-DDoS-Detection\\venv\\Scripts\\python.exe",
+  "cpu_count": 6,
+  "cpu_count_logical": 12,
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "gpu_count": 1,
+  "disk": {
+    "/": {
+      "total": "411440345088",
+      "used": "257305366528"
+    }
+  },
+  "memory": {
+    "total": "16893382656"
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "memoryTotal": "4294967296",
+      "cudaCores": 2048,
+      "architecture": "Ampere",
+      "uuid": "GPU-0f00a904-32f8-20aa-4ef1-01d0c062ec79"
+    }
+  ],
+  "cudaVersion": "12.7",
+  "writerId": "aq1174hw9ab71w9b1054j6fn9g08i1h9"
+}

@@ -14,7 +14,7 @@ def create_inference_folder():
     """
     Create a timestamped folder for saving inference results
     """
-    base_path = Path("/models/model_basic/inference")
+    base_path = Path("C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_basic/inference")
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     inference_folder = base_path / timestamp
 
@@ -137,7 +137,7 @@ def find_latest_checkpoint(checkpoint_dir):
 
 def main():
     # Load config
-    config_path = Path('config/config.yaml')
+    config_path = Path("C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_basic/config/config.yaml")
     if not config_path.exists():
         raise FileNotFoundError("config.yaml not found")
 
@@ -145,10 +145,10 @@ def main():
         config = yaml.safe_load(f)
 
     # Find checkpoint - either use specific path or find latest
-    checkpoint_dir = "model_basic/lightning_logs/checkpoints"
+    checkpoint_dir = "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_basic/lightning_logs/checkpoints"
     try:
         # Try to use the specific checkpoint first
-        checkpoint_path = "/models/model_basic/lightning_logs/checkpoints/best-checkpoint-epoch=09-val_loss=0.1684.ckpt"
+        checkpoint_path = "C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_basic/lightning_logs/checkpoints/best-checkpoint-epoch=22-val_loss=0.0032.ckpt"
         if not Path(checkpoint_path).exists():
             print(f"Specific checkpoint not found, looking for latest in {checkpoint_dir}")
             checkpoint_path = find_latest_checkpoint(checkpoint_dir)
@@ -200,10 +200,13 @@ def main():
     results_folder = create_inference_folder()
     print(f"Results will be saved to: {results_folder}")
 
-    # Define class names for 12-class DDoS detection
-    class_names = ['BENIGN', 'DrDoS_DNS', 'DrDoS_LDAP', 'DrDoS_MSSQL',
-       'DrDoS_NetBIOS', 'DrDoS_NTP', 'DrDoS_SNMP', 'DrDoS_SSDP',
-       'DrDoS_UDP', 'Syn', 'TFTP', 'UDP-lag']
+    # # Define class names for 12-class DDoS detection
+    # class_names = ['BENIGN', 'DrDoS_DNS', 'DrDoS_LDAP', 'DrDoS_MSSQL',
+    #    'DrDoS_NetBIOS', 'DrDoS_NTP', 'DrDoS_SNMP', 'DrDoS_SSDP',
+    #    'DrDoS_UDP', 'Syn', 'TFTP', 'UDP-lag']
+
+    # Define class names for 6-class DDoS detection
+    class_names = ['DrDoS_DNS', 'DrDoS_LDAP', 'DrDoS_NetBIOS', 'DrDoS_NTP', 'DrDoS_SNMP', 'TFTP']
 
     # Calculate metrics
     metrics = calculate_metrics(all_labels, all_preds, all_probs, class_names)

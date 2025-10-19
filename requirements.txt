@@ -19,3 +19,10 @@ tensorboard
 wandb
 uv
 xgboost
+fastparquet
+PyYAML
+ipaddress
+psutil
+shap
+ipython
+rich

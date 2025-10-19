@@ -1,0 +1,46 @@
+Evaluation Results
+==================
+
+Timestamp: 2025-08-15 02:10:40
+Model Checkpoint: C:/Users/AGFirass/Documents/GitHub/Transformer-Based-DDoS-Detection/models/model_basic/lightning_logs/checkpoints/best-checkpoint-epoch=17-val_loss=0.1372.ckpt
+Device: cuda
+Test Set Size: 24000 samples
+Number of Classes: 12
+
+Test Accuracy: 0.9425
+
+Classification Report:
+================================================================================
+               precision    recall  f1-score   support
+
+       BENIGN       0.99      0.98      0.99      2063
+    DrDoS_DNS       1.00      1.00      1.00      2015
+   DrDoS_LDAP       0.99      1.00      0.99      1971
+  DrDoS_MSSQL       0.98      0.99      0.99      1946
+DrDoS_NetBIOS       0.99      1.00      0.99      2010
+    DrDoS_NTP       1.00      0.98      0.99      1982
+   DrDoS_SNMP       0.99      1.00      1.00      2053
+   DrDoS_SSDP       0.97      0.99      0.98      2083
+    DrDoS_UDP       0.95      0.97      0.96      1925
+          Syn       0.98      0.51      0.67      1938
+         TFTP       1.00      0.93      0.97      2022
+      UDP-lag       0.63      0.95      0.76      1992
+
+     accuracy                           0.94     24000
+    macro avg       0.96      0.94      0.94     24000
+ weighted avg       0.96      0.94      0.94     24000
+
+
+Class Names Used:
+Class 0: BENIGN
+Class 1: DrDoS_DNS
+Class 2: DrDoS_LDAP
+Class 3: DrDoS_MSSQL
+Class 4: DrDoS_NetBIOS
+Class 5: DrDoS_NTP
+Class 6: DrDoS_SNMP
+Class 7: DrDoS_SSDP
+Class 8: DrDoS_UDP
+Class 9: Syn
+Class 10: TFTP
+Class 11: UDP-lag

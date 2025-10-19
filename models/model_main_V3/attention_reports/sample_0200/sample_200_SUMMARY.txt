@@ -1,0 +1,26 @@
+================================================================================
+ATTENTION ANALYSIS REPORT - Sample 200
+================================================================================
+
+TRUE LABEL:       3
+PREDICTED LABEL:  3
+CONFIDENCE:       91.25%
+CORRECT:           YES
+
+--------------------------------------------------------------------------------
+ATTENTION MECHANISMS CAPTURED
+--------------------------------------------------------------------------------
+
+• Implicit Model:
+  - Layers: 3
+  - Features: 26
+  - Attention Type: Self-Attention
+
+• Explicit Model:
+  - Temporal: 8 time-based features
+  - Statistical: 1 aggregated feature
+  - Protocol: 1 protocol identifier
+  - Spatial: Bidirectional (Source ↔ Dest)
+  - Group Interaction: 4x4 cross-attention
+  - Transformer Layers: 4
+

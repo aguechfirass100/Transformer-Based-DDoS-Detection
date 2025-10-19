@@ -1,0 +1,44 @@
+================================================================================
+                          BATCH SHAP ANALYSIS REPORT
+================================================================================
+
+Generated: 2025-10-18 23:32:51
+Number of Samples: 48
+Number of Features: 26
+Number of Classes: 6
+
+--------------------------------------------------------------------------------
+                         OVERALL FEATURE IMPORTANCE
+--------------------------------------------------------------------------------
+
+Top 20 Most Important Features (averaged across all samples):
+
+  1. Flow IAT Min                            0.000000
+  2. Timestamp                               0.000000
+  3. Fwd Packet Length Min                   0.000000
+  4. Fwd Packets/s                           0.000000
+  5. Flow IAT Max                            0.000000
+  6. Destination Port                        0.000000
+  7. Subflow Fwd Bytes                       0.000000
+  8. Max Packet Length                       0.000000
+  9. Fwd Header Length                       0.000000
+ 10. Min Packet Length                       0.000000
+ 11. Fwd IAT Max                             0.000000
+ 12. Fwd Packet Length Std                   0.000000
+ 13. Fwd Packet Length Max                   0.000000
+ 14. Flow Duration                           0.000000
+ 15. Fwd IAT Total                           0.000000
+ 16. min_seg_size_forward                    0.000000
+ 17. Average Packet Size                     0.000000
+ 18. Total Length of Fwd Packets             0.000000
+ 19. Flow IAT Mean                           0.000000
+ 20. Packet Length Std                       0.000000
+
+--------------------------------------------------------------------------------
+                         FEATURE GROUP SUMMARY
+--------------------------------------------------------------------------------
+
+TEMPORAL             - Mean Importance: 0.000000
+SPATIAL              - Mean Importance: 0.000000
+PROTOCOL             - Mean Importance: 0.000000
+STATISTICAL          - Mean Importance: 0.000000
