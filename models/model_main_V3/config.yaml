@@ -10,7 +10,7 @@ data:
 # Feature groups for explicit model
 feature_groups:
   temporal:
-    - "Timestamp"
+#    - "Timestamp"
     - "Flow IAT Min"
     - "Fwd IAT Mean"
     - "Fwd IAT Max"

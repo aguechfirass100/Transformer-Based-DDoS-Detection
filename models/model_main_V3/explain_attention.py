@@ -9,23 +9,20 @@ import os
 import warnings
 from typing import Dict, List, Tuple
 
-# --- Import from your project files ---
 from train import load_config, CONFIG_PATH
 from models.model_main_V3.hybrid_model import HybridTransformerClassifier
 from models.model_main_V3.dataloader import HybridDataModule
 from models.model_basic.model import TransformerClassifier
 from models.model_multi_attention.model import SimplifiedMultiAttentionTransformer
 
-# Suppress matplotlib warnings for cleaner output
 warnings.filterwarnings("ignore", module="matplotlib")
 
-# Enhanced color schemes for different attention types
 ATTENTION_COLORMAPS = {
-    'implicit': 'YlOrRd',  # Yellow-Orange-Red for implicit
-    'explicit': 'YlGnBu',  # Yellow-Green-Blue for explicit
-    'fusion': 'RdPu',  # Red-Purple for fusion
-    'spatial': 'BuPu',  # Blue-Purple for spatial
-    'temporal': 'Oranges',  # Orange for temporal
+    'implicit': 'YlOrRd',
+    'explicit': 'YlGnBu',
+    'fusion': 'RdPu',
+    'spatial': 'BuPu',
+    'temporal': 'Oranges',
 }
 
 
@@ -37,52 +34,31 @@ def plot_attention_heatmap(weights: torch.Tensor,
                            attention_type: str = 'default',
                            show_colorbar: bool = True,
                            annotate: bool = True):
-    """
-    Visualizes attention weights as an enhanced heatmap with better readability.
 
-    Args:
-        weights (torch.Tensor): Attention weights, shape [batch_size, num_heads, query_len, key_len]
-        title (str): Title for the plot.
-        xticklabels (list): Labels for the X-axis (Keys).
-        yticklabels (list): Labels for the Y-axis (Queries).
-        save_path (Path): Path to save the PNG file.
-        attention_type (str): Type of attention for color scheme selection.
-        show_colorbar (bool): Whether to show the colorbar.
-        annotate (bool): Whether to annotate cells with values.
-    """
-
-    # 1. Detach, move to CPU, and remove batch dim
     weights = weights.squeeze(0).detach().cpu()
 
-    # 2. Average over all attention heads -> [query_len, key_len]
     if weights.dim() == 3:
         weights_avg = weights.mean(dim=0)
     else:
         weights_avg = weights
 
-    # 3. Convert to numpy for plotting
     weights_np = weights_avg.numpy()
 
-    # 4. Determine figure size dynamically
     num_cols = len(xticklabels)
     num_rows = len(yticklabels)
 
-    # Scale based on matrix size
     cell_width = 0.8 if num_cols > 10 else 1.2
     cell_height = 0.6 if num_rows > 10 else 1.0
 
     width = max(8, num_cols * cell_width)
     height = max(6, num_rows * cell_height)
 
-    # 5. Choose colormap based on attention type
     cmap = ATTENTION_COLORMAPS.get(attention_type, 'viridis')
 
-    # 6. Create plot with enhanced styling
     fig, ax = plt.subplots(figsize=(width, height))
 
-    # Format annotation based on matrix size
     fmt = '.2f' if num_cols * num_rows > 100 else '.3f'
-    annot = annotate and (num_cols * num_rows <= 200)  # Don't annotate huge matrices
+    annot = annotate and (num_cols * num_rows <= 200)
 
     sns.heatmap(
         weights_np,
@@ -101,22 +77,18 @@ def plot_attention_heatmap(weights: torch.Tensor,
         cbar_kws={'label': 'Attention Weight', 'shrink': 0.8}
     )
 
-    # Enhanced title with better formatting
     ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
     ax.set_xlabel("Keys (Attending To)", fontsize=11, fontweight='bold')
     ax.set_ylabel("Queries (Attending From)", fontsize=11, fontweight='bold')
 
-    # Rotate labels for better readability
     plt.xticks(rotation=45, ha='right', fontsize=9)
     plt.yticks(rotation=0, fontsize=9)
 
-    # 7. Add statistics text box
     stats_text = f"Max: {weights_np.max():.3f}\nMin: {weights_np.min():.3f}\nMean: {weights_np.mean():.3f}"
     props = dict(boxstyle='round', facecolor='wheat', alpha=0.8)
     ax.text(1.02, 0.98, stats_text, transform=ax.transAxes, fontsize=9,
             verticalalignment='top', bbox=props)
 
-    # 8. Save figure with high DPI
     plt.tight_layout()
     save_path.parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(save_path, dpi=150, bbox_inches='tight')
@@ -131,9 +103,7 @@ def create_summary_report(sample_idx: int,
                           pred_prob: float,
                           attn_summary: Dict,
                           output_dir: Path):
-    """
-    Creates a text summary report for the sample.
-    """
+
     report_path = output_dir / f"sample_{sample_idx}_SUMMARY.txt"
 
     with open(report_path, 'w', encoding="utf-8") as f:
@@ -160,22 +130,14 @@ def create_summary_report(sample_idx: int,
 
 
 def explain_sample_attention(model, datamodule, sample_idx: int, output_dir: Path, device: torch.device):
-    """
-    Runs a single sample through the model and visualizes all its attention weights
-    with enhanced visualizations and summary report.
-    """
 
-    # 1. Get the raw sample from the dataset
     test_dataset = datamodule.test_dataset
     implicit_features, explicit_features_dict, protocol_id, label = test_dataset[sample_idx]
 
-    # 2. Get metadata for labels
     label_name = datamodule.label_encoder.classes_[label]
 
-    # --- Get all feature names for labeling ---
     all_feature_names = list(test_dataset.features_df.columns)
 
-    # Get feature names for each explicit group
     group_feature_names = {}
     for group_name, feature_list in datamodule.feature_groups.items():
         indices = test_dataset.feature_indices.get(group_name, [])
@@ -184,18 +146,15 @@ def explain_sample_attention(model, datamodule, sample_idx: int, output_dir: Pat
         else:
             group_feature_names[group_name] = [group_name]
 
-    # Labels for high-level explicit groups
     explicit_group_labels = ['Temporal', 'Spatial', 'Protocol', 'Statistical']
     fusion_labels = ['Implicit Branch', 'Explicit Branch']
 
-    # 3. Add batch dimension and move to device
     implicit_features = implicit_features.unsqueeze(0).to(device)
     protocol_id = protocol_id.unsqueeze(0).to(device)
     explicit_features_dict = {
         k: v.unsqueeze(0).to(device) for k, v in explicit_features_dict.items()
     }
 
-    # 4. Run forward pass requesting attention weights
     print(f"\n{'=' * 80}")
     print(f"ANALYZING SAMPLE {sample_idx}")
     print(f"{'=' * 80}")
@@ -209,7 +168,6 @@ def explain_sample_attention(model, datamodule, sample_idx: int, output_dir: Pat
             return_attn_weights=True
         )
 
-    # 5. Get prediction
     pred_prob = torch.softmax(logits, dim=1).max().item()
     pred_idx = torch.argmax(logits, dim=1).item()
     pred_name = datamodule.label_encoder.classes_[pred_idx]
@@ -218,17 +176,13 @@ def explain_sample_attention(model, datamodule, sample_idx: int, output_dir: Pat
     print(f"Result: {' CORRECT' if label_name == pred_name else ' INCORRECT'}")
     print(f"\nGenerating attention visualizations...\n")
 
-    # Dictionary to store attention summary
     attn_summary = {}
 
-    # --- 6. Plot all available attention weights with enhanced styling ---
 
-    # Plot 1: Implicit Model
     if attn_weights_dict.get('implicit_model_attns'):
         implicit_attns = attn_weights_dict['implicit_model_attns']['transformer_encoder_layers']
         last_layer_attn = implicit_attns[-1]
 
-        # Truncate feature names if too long
         truncated_features = [name[:20] + '...' if len(name) > 20 else name
                               for name in all_feature_names]
 
@@ -247,7 +201,6 @@ def explain_sample_attention(model, datamodule, sample_idx: int, output_dir: Pat
             'Attention Type': 'Self-Attention'
         }
 
-    # Plot 2: Explicit Model Sub-groups
     if attn_weights_dict.get('explicit_model_attns'):
         explicit_attns = attn_weights_dict['explicit_model_attns']
         attn_summary['Explicit Model'] = {}
@@ -265,7 +218,6 @@ def explain_sample_attention(model, datamodule, sample_idx: int, output_dir: Pat
             )
             attn_summary['Explicit Model']['Temporal'] = '8 time-based features'
 
-        # Statistical
         if explicit_attns.get('statistical_self_attn') is not None:
             plot_attention_heatmap(
                 weights=explicit_attns['statistical_self_attn'],
@@ -278,7 +230,6 @@ def explain_sample_attention(model, datamodule, sample_idx: int, output_dir: Pat
             )
             attn_summary['Explicit Model']['Statistical'] = '1 aggregated feature'
 
-        # Protocol
         if explicit_attns.get('protocol_self_attn') is not None:
             plot_attention_heatmap(
                 weights=explicit_attns['protocol_self_attn'],
@@ -291,7 +242,6 @@ def explain_sample_attention(model, datamodule, sample_idx: int, output_dir: Pat
             )
             attn_summary['Explicit Model']['Protocol'] = '1 protocol identifier'
 
-        # Spatial (bidirectional cross-attention)
         if explicit_attns.get('spatial_cross_attn') is not None:
             src_attn, dst_attn = explicit_attns['spatial_cross_attn']
             plot_attention_heatmap(
@@ -312,7 +262,6 @@ def explain_sample_attention(model, datamodule, sample_idx: int, output_dir: Pat
             )
             attn_summary['Explicit Model']['Spatial'] = 'Bidirectional (Source ↔ Dest)'
 
-        # Feature group cross-attention
         if explicit_attns.get('feature_group_cross_attn') is not None:
             plot_attention_heatmap(
                 weights=explicit_attns['feature_group_cross_attn'],
@@ -324,7 +273,6 @@ def explain_sample_attention(model, datamodule, sample_idx: int, output_dir: Pat
             )
             attn_summary['Explicit Model']['Group Interaction'] = '4x4 cross-attention'
 
-        # Transformer layers
         if explicit_attns.get('transformer_encoder_layers') is not None:
             last_layer_attn = explicit_attns['transformer_encoder_layers'][-1]
             plot_attention_heatmap(
@@ -337,7 +285,6 @@ def explain_sample_attention(model, datamodule, sample_idx: int, output_dir: Pat
             )
             attn_summary['Explicit Model']['Transformer Layers'] = len(explicit_attns['transformer_encoder_layers'])
 
-    # Plot 3: Hybrid Fusion Attention
     if attn_weights_dict.get('fusion_attention') is not None:
         plot_attention_heatmap(
             weights=attn_weights_dict['fusion_attention'],
@@ -352,7 +299,6 @@ def explain_sample_attention(model, datamodule, sample_idx: int, output_dir: Pat
             'Branches': 'Implicit + Explicit'
         }
 
-    # Create summary report
     create_summary_report(sample_idx, label_name, pred_name, pred_prob, attn_summary, output_dir)
 
     if not attn_weights_dict:
@@ -360,9 +306,7 @@ def explain_sample_attention(model, datamodule, sample_idx: int, output_dir: Pat
 
 
 def main(ckpt_path: str, output_dir: str, sample_indices: List[int] = None):
-    """
-    Main function to load model, setup dataloader, and run explanations.
-    """
+
 
     print(f"\n{'=' * 80}")
     print("ATTENTION VISUALIZATION TOOL")
@@ -371,7 +315,6 @@ def main(ckpt_path: str, output_dir: str, sample_indices: List[int] = None):
 
     config = load_config(CONFIG_PATH)
 
-    # 1. Setup DataModule
     print("Setting up data module...")
     data_module = HybridDataModule(
         data_path=config['data']['data_path'],
@@ -385,7 +328,6 @@ def main(ckpt_path: str, output_dir: str, sample_indices: List[int] = None):
     data_module.setup()
     print(f" Test dataset size: {len(data_module.test_dataset)} samples")
 
-    # 2. Load Trained Model
     if not Path(ckpt_path).exists():
         print(f" Error: Checkpoint file not found at {ckpt_path}")
         return
@@ -402,7 +344,6 @@ def main(ckpt_path: str, output_dir: str, sample_indices: List[int] = None):
     model.eval()
     print(f"✓ Model loaded on {device}")
 
-    # 3. Run explanations for samples
     output_path = Path(output_dir)
 
     if sample_indices is None:

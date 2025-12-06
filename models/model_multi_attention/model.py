@@ -417,7 +417,6 @@ class SimplifiedMultiAttentionTransformer(pl.LightningModule):
 
     def init_head_weights_from_feature_importance(self):
         """Initialize head weights based on integrated gradients feature importance"""
-        # ... (no changes in this function) ...
         feature_importance = {
             'Timestamp': 0.23276792,
             'Min Packet Length': 0.014600158,
@@ -468,22 +467,18 @@ class SimplifiedMultiAttentionTransformer(pl.LightningModule):
         print(f"  Protocol: {self.base_head_weights[2]:.4f}")
         print(f"  Statistical: {self.base_head_weights[3]:.4f}")
 
-    # ... (no changes in this function) ...
 
     def get_dynamic_head_weights(self):
         """Get current head weights with temperature scaling"""
         return F.softmax(self.head_weights / self.temperature, dim=0)
 
-    # ATTN: Created new function to separate representation from classification
     def get_representation(self, features, return_attn_weights: bool = False):
         """
         Runs the model forward pass up to the representation layer,
         optionally returning all attention weights.
         """
-        # ATTN: Dictionary to store all weights
         attn_weights_dict = {}
 
-        # ATTN: Call sub-modules and capture weights
         temp_out, temp_attn = self.temporal_attn(
             features['temporal'], return_attn_weights=return_attn_weights
         )
@@ -503,20 +498,16 @@ class SimplifiedMultiAttentionTransformer(pl.LightningModule):
             attn_weights_dict['protocol_self_attn'] = proto_attn
             attn_weights_dict['statistical_self_attn'] = stat_attn
 
-        # Get current head weights
         current_weights = self.get_dynamic_head_weights()
 
-        # Apply weights to head outputs before stacking
         weighted_temp = temp_out * current_weights[0]
         weighted_spatial = spatial_out * current_weights[1]
         weighted_proto = proto_out * current_weights[2]
         weighted_stat = stat_out * current_weights[3]
 
-        # Create weighted sequence
         feature_sequence = torch.stack([weighted_temp, weighted_spatial, weighted_proto, weighted_stat], dim=1)
 
-        # Cross-attention
-        # ATTN: Capture cross-attention weights
+
         cross_out, cross_attn_weights = self.cross_attention(
             feature_sequence, feature_sequence, feature_sequence, need_weights=return_attn_weights
         )
@@ -525,8 +516,7 @@ class SimplifiedMultiAttentionTransformer(pl.LightningModule):
         if return_attn_weights:
             attn_weights_dict['feature_group_cross_attn'] = cross_attn_weights
 
-        # Transformer processing
-        # ATTN: Capture internal transformer layer weights
+
         transformer_out, transformer_layer_attns = self.transformer(
             cross_out, return_attn_weights=return_attn_weights
         )
@@ -534,7 +524,6 @@ class SimplifiedMultiAttentionTransformer(pl.LightningModule):
         if return_attn_weights:
             attn_weights_dict['transformer_encoder_layers'] = transformer_layer_attns  # This is a list
 
-        # Weighted pooling instead of simple average
         pooled = (transformer_out * current_weights.view(1, -1, 1)).sum(dim=1)
 
         if return_attn_weights:
@@ -542,7 +531,6 @@ class SimplifiedMultiAttentionTransformer(pl.LightningModule):
         else:
             return pooled, None
 
-    # ATTN: Modified forward to use get_representation
     def forward(self, features, protocol_ids=None, return_attn_weights: bool = False):
 
         representation, attn_weights_dict = self.get_representation(
@@ -563,7 +551,6 @@ class SimplifiedMultiAttentionTransformer(pl.LightningModule):
         logits = self(features, protocol_ids)
         loss = self.criterion(logits, labels)
 
-        # ... (rest of the function is unchanged) ...
         weight_reg = 0.01 * torch.var(self.head_weights)
         loss = loss + weight_reg
         self.train_acc(logits, labels)
@@ -578,23 +565,19 @@ class SimplifiedMultiAttentionTransformer(pl.LightningModule):
         self.log("weight_statistical", current_weights[3], on_step=False, on_epoch=True)
         self.log("temperature", self.temperature, on_step=False, on_epoch=True)
         return loss
-        # ... (rest of the function is unchanged) ...
 
     def validation_step(self, batch, batch_idx):
         features, protocol_ids, labels = batch
         # ATTN: Pass return_attn_weights=False (default)
         logits = self(features, protocol_ids)
         loss = self.criterion(logits, labels)
-        # ... (rest of the function is unchanged) ...
         self.val_acc(logits, labels)
         self.val_f1(logits, labels)
         self.log("val_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
         self.log("val_acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True)
         self.log("val_f1", self.val_f1, on_step=False, on_epoch=True)
-        # ... (rest of the function is unchanged) ...
 
     def configure_optimizers(self):
-        # ... (no changes in this function) ...
         optimizer = torch.optim.AdamW(
             self.parameters(),
             lr=self.lr,
@@ -616,10 +599,8 @@ class SimplifiedMultiAttentionTransformer(pl.LightningModule):
                 "interval": "step"
             }
         }
-        # ... (no changes in this function) ...
 
     def get_head_weights_summary(self):
-        # ... (no changes in this function) ...
         current_weights = self.get_dynamic_head_weights()
         return {
             'temporal': current_weights[0].item(),
@@ -628,4 +609,3 @@ class SimplifiedMultiAttentionTransformer(pl.LightningModule):
             'statistical': current_weights[3].item(),
             'temperature': self.temperature.item()
         }
-        # ... (no changes in this function) ...

@@ -15,9 +15,7 @@ from explainability import HybridModelExplainer
 
 def analyze_single_samples(explainer, test_dataset, output_base_dir: Path,
                            sample_indices: list = None):
-    """
-    Analyze individual samples in detail.
-    """
+
     print("\n" + "=" * 80)
     print("SINGLE SAMPLE ANALYSIS MODE")
     print("=" * 80)
@@ -60,9 +58,7 @@ def analyze_single_samples(explainer, test_dataset, output_base_dir: Path,
 
 def analyze_batch(explainer, test_dataset, output_base_dir: Path,
                   num_samples: int = 50, balanced: bool = True):
-    """
-    Analyze a batch of samples for aggregate insights.
-    """
+
     print("\n" + "=" * 80)
     print("BATCH ANALYSIS MODE")
     print("=" * 80 + "\n")
@@ -104,9 +100,7 @@ def analyze_batch(explainer, test_dataset, output_base_dir: Path,
 
 
 def compare_attack_types(explainer, test_dataset, output_base_dir: Path):
-    """
-    Compare feature importance across different attack types.
-    """
+
     print("\n" + "=" * 80)
     print("CROSS-ATTACK COMPARISON MODE")
     print("=" * 80 + "\n")
@@ -136,9 +130,7 @@ def compare_attack_types(explainer, test_dataset, output_base_dir: Path):
 
 def analyze_misclassifications(explainer, test_dataset, model, device,
                                output_base_dir: Path, num_samples: int = 10):
-    """
-    Focus analysis on misclassified samples to understand model failures.
-    """
+
     print("\n" + "=" * 80)
     print("MISCLASSIFICATION ANALYSIS MODE")
     print("=" * 80 + "\n")
@@ -205,9 +197,7 @@ def analyze_misclassifications(explainer, test_dataset, model, device,
 
 
 def generate_summary_report(output_base_dir: Path, explainer):
-    """
-    Generate a comprehensive summary of all analyses.
-    """
+
     summary_path = output_base_dir / "MASTER_SUMMARY.txt"
 
     with open(summary_path, 'w', encoding='utf-8') as f:
@@ -251,26 +241,6 @@ def generate_summary_report(output_base_dir: Path, explainer):
             num_misclass = len(list((output_base_dir / "misclassifications").iterdir()))
             f.write(f"✓ Misclassification Analysis:  {num_misclass} samples\n")
 
-        f.write("\n" + "-" * 80 + "\n")
-        f.write("HOW TO USE THESE REPORTS\n")
-        f.write("-" * 80 + "\n\n")
-
-        f.write("1. SINGLE SAMPLE REPORTS: Review individual predictions in detail\n")
-        f.write("   - Check feature_importance.png for top influential features\n")
-        f.write("   - Review group_analysis.png for feature group impacts\n")
-        f.write("   - Read EXPLANATION_REPORT.txt for textual insights\n\n")
-
-        f.write("2. BATCH ANALYSIS: Understand model behavior across many samples\n")
-        f.write("   - batch_summary_bar.png shows overall feature importance\n")
-        f.write("   - batch_summary_beeswarm.png shows feature value distributions\n")
-        f.write("   - per_class_importance.png compares features across attacks\n\n")
-
-        f.write("3. ATTACK COMPARISON: See how different attacks are distinguished\n")
-        f.write("   - sample_comparison.png shows side-by-side feature importance\n\n")
-
-        f.write("4. MISCLASSIFICATION ANALYSIS: Learn where the model struggles\n")
-        f.write("   - Focus on these to improve model performance\n")
-        f.write("   - Look for patterns in confused attack types\n\n")
 
     print(f"\n✓ Master summary saved to: {summary_path}")
 
@@ -281,17 +251,7 @@ def main(ckpt_path: str,
          sample_indices: list = None,
          num_batch: int = 50,
          num_misclass: int = 10):
-    """
-    Main function to orchestrate explainability analysis.
 
-    Args:
-        ckpt_path: Path to trained model checkpoint
-        output_dir: Base directory for all outputs
-        mode: Analysis mode - 'all', 'single', 'batch', 'compare', or 'misclass'
-        sample_indices: Specific samples for single analysis
-        num_batch: Number of samples for batch analysis
-        num_misclass: Number of misclassifications to analyze
-    """
 
     print("\n" + "=" * 80)
     print("PROFESSIONAL EXPLAINABILITY SUITE")
@@ -373,7 +333,6 @@ if __name__ == "__main__":
         description="Professional Explainability Suite for Hybrid DDoS Detection Model",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-Examples:
   # Run all analyses
   python run_explanation.py --mode all
 

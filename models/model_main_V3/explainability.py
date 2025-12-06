@@ -1,28 +1,17 @@
 import torch
-
 import shap
-
 import numpy as np
-
 import pandas as pd
-
 import matplotlib.pyplot as plt
-
 import seaborn as sns
-
 from pathlib import Path
-
 import warnings
-
 from datetime import datetime
-
 from typing import Dict, List, Tuple, Optional
-
 import json
 
 warnings.filterwarnings("ignore", module="matplotlib")
 
-# Professional color palette
 COLORS = {
     'primary': '#2E86AB',
     'secondary': '#A23B72',
@@ -34,10 +23,6 @@ COLORS = {
 
 
 class HybridModelExplainer:
-    """
-    Professional explainability suite for Hybrid Transformer models.
-    Provides SHAP-based interpretations with comprehensive visualizations.
-    """
 
     def __init__(self, model, datamodule, background_samples: int = 100):
         print("\\n" + "=" * 80)
@@ -52,7 +37,6 @@ class HybridModelExplainer:
         self.feature_names = list(train_dataset.features_df.columns)
         self.feature_indices = train_dataset.feature_indices
 
-        # Validate indices
         num_features = len(self.feature_names)
         for group_name, indices in self.feature_indices.items():
             invalid_indices = [idx for idx in indices if idx >= num_features]
@@ -63,7 +47,6 @@ class HybridModelExplainer:
         # self.class_names = datamodule.label_encoder.classes_
         self.class_names = [str(cls) for cls in datamodule.label_encoder.classes_]
 
-        # Store feature groups for grouped analysis
         self.feature_groups = datamodule.feature_groups
 
         try:
@@ -89,7 +72,6 @@ class HybridModelExplainer:
         print("✓ SHAP KernelExplainer initialized\\n")
 
     def predict_wrapper(self, implicit_features_batch: np.ndarray) -> np.ndarray:
-        """Wrapper to adapt raw features for model input."""
         input_tensor = torch.tensor(implicit_features_batch, dtype=torch.float32).to(self.device)
         batch_size = input_tensor.shape[0]
         protocol_ids = input_tensor[:, self.protocol_col_index].long().clamp(0, 17)
@@ -113,7 +95,6 @@ class HybridModelExplainer:
                                         save_path: Path,
                                         top_k: int = 15,
                                         title: str = "Feature Importance"):
-        """Create a horizontal bar plot showing feature importance."""
         abs_shap = np.abs(shap_values)
         sorted_idx = np.argsort(abs_shap)[-top_k:]
 
@@ -130,7 +111,6 @@ class HybridModelExplainer:
         ax.axvline(x=0, color='black', linestyle='-', linewidth=0.8)
         ax.grid(axis='x', alpha=0.3)
 
-        # Add legend
         from matplotlib.patches import Patch
         legend_elements = [
             Patch(facecolor=COLORS['accent'], label='Increases prediction'),
@@ -145,19 +125,16 @@ class HybridModelExplainer:
     def _create_feature_group_analysis(self, shap_values: np.ndarray,
                                        sample_values: np.ndarray,
                                        save_path: Path):
-        """Analyze and visualize feature importance by groups (temporal, spatial, etc.)."""
-        # DEBUG: Print dimensions
+
         print(f"DEBUG: shap_values.shape = {shap_values.shape}")
         print(f"DEBUG: sample_values.shape = {sample_values.shape}")
 
         group_impacts = {}
 
-        # Add bounds checking
         max_valid_index = shap_values.shape[0] - 1
 
         for group_name, indices in self.feature_indices.items():
             if len(indices) > 0:
-                # Filter indices to only include valid ones
                 valid_indices = [idx for idx in indices if idx <= max_valid_index]
 
                 if len(valid_indices) == 0:
@@ -172,10 +149,8 @@ class HybridModelExplainer:
                     'num_features': len(valid_indices)
                 }
 
-        # Create visualization
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
-        # Plot 1: Total impact by group
         groups = list(group_impacts.keys())
         total_impacts = [group_impacts[g]['total_impact'] for g in groups]
         colors_palette = [COLORS['primary'], COLORS['accent'], COLORS['success'], COLORS['secondary']]
@@ -186,7 +161,6 @@ class HybridModelExplainer:
         ax1.tick_params(axis='x', rotation=45)
         ax1.grid(axis='y', alpha=0.3)
 
-        # Plot 2: Positive vs Negative impact
         pos_impacts = [group_impacts[g]['positive_impact'] for g in groups]
         neg_impacts = [np.abs(group_impacts[g]['negative_impact']) for g in groups]
 
@@ -215,7 +189,6 @@ class HybridModelExplainer:
                               sample_values: np.ndarray,
                               pred_class_name: str,
                               save_path: Path):
-        """Create a decision plot showing how features contribute to final prediction."""
         try:
             plt.figure(figsize=(10, 8))
             shap.decision_plot(
@@ -242,7 +215,6 @@ class HybridModelExplainer:
                               top_features: List[Tuple[str, float]],
                               group_impacts: Dict,
                               save_path: Path):
-        """Generate comprehensive text report."""
         with open(save_path, 'w', encoding='utf-8') as f:
             f.write("=" * 80 + "\\n")
             f.write("SHAP EXPLAINABILITY REPORT\\n")
@@ -292,17 +264,14 @@ class HybridModelExplainer:
             f.write("• Negative values push the prediction away from the predicted class\\n")
             f.write("• Larger absolute values indicate stronger influence\\n\\n")
 
-            # Add insights based on prediction
             f.write("-" * 80 + "\\n")
             f.write("KEY INSIGHTS\\n")
             f.write("-" * 80 + "\\n\\n")
 
-            # Identify dominant feature group
             dominant_group = max(group_impacts.items(), key=lambda x: x[1]['total_impact'])
             f.write(f"• The {dominant_group[0].upper()} feature group has the strongest\\n")
             f.write(f"  influence on this prediction ({dominant_group[1]['total_impact']:.4f} total impact)\\n\\n")
 
-            # Identify most influential feature
             top_feature = top_features[0]
             f.write(f"• The most influential feature is '{top_feature[0]}'\\n")
             f.write(f"  with a SHAP value of {top_feature[1]:.4f}\\n\\n")
@@ -313,17 +282,7 @@ class HybridModelExplainer:
                            output_dir: str = ".",
                            show_plot: bool = False,
                            save_html: bool = True):
-        """
-        Generate comprehensive explanation for a single prediction.
 
-        Args:
-            sample_df_row: Feature values for the sample
-            sample_idx: Sample identifier
-            true_label: Ground truth label (if available)
-            output_dir: Directory to save reports
-            show_plot: Whether to display plots interactively
-            save_html: Whether to save interactive HTML plots
-        """
         print(f"\\n{'=' * 80}")
         print(f"EXPLAINING SAMPLE {sample_idx}")
         print(f"{'=' * 80}\\n")
@@ -333,7 +292,6 @@ class HybridModelExplainer:
 
         sample_np = sample_df_row.values.reshape(1, -1)
 
-        # Get prediction
         probs = self.predict_wrapper(sample_np)[0]
         pred_class_idx = np.argmax(probs)
         pred_class_name = self.class_names[pred_class_idx]
@@ -347,7 +305,6 @@ class HybridModelExplainer:
         print("🔍 Computing SHAP values (this may take 30-60 seconds)...")
         shap_values = self.explainer.shap_values(sample_np, nsamples=100, l1_reg=1e-10)
 
-        # DEBUG: Check the shape
         print(f"DEBUG: Initial shap_values type: {type(shap_values)}")
         if isinstance(shap_values, list):
             print(f"DEBUG: shap_values is a list with {len(shap_values)} elements")
@@ -356,7 +313,6 @@ class HybridModelExplainer:
         else:
             print(f"DEBUG: shap_values shape: {shap_values.shape}")
 
-        # FIXED: Handle SHAP output correctly for multi-class
         if isinstance(shap_values, list):
             # List of arrays, one per class: each array is (n_samples, n_features)
             shap_values_for_pred = shap_values[pred_class_idx][0]
@@ -433,7 +389,6 @@ class HybridModelExplainer:
         except Exception as e:
             print(f"⚠ Could not create waterfall plot: {e}")
 
-        # 4. Decision Plot
         decision_path = output_path / "4_decision_plot.png"
         if self._create_decision_plot(
                 shap_values_for_pred,
@@ -444,7 +399,6 @@ class HybridModelExplainer:
         ):
             print(f"✓ Saved: {decision_path.name}")
 
-        # 5. Force Plot (Interactive HTML)
         if save_html:
             force_plot_path = output_path / "5_force_plot.html"
             try:
@@ -460,7 +414,6 @@ class HybridModelExplainer:
             except Exception as e:
                 print(f"⚠ Could not create force plot: {e}")
 
-        # 6. Text Report
         report_path = output_path / "EXPLANATION_REPORT.txt"
         self._generate_text_report(
             sample_idx,
@@ -489,14 +442,7 @@ class HybridModelExplainer:
     def explain_batch(self, samples_df: pd.DataFrame,
                       output_dir: str = ".",
                       class_labels: Optional[List[str]] = None):
-        """
-        Generate comprehensive explanation for a batch of samples.
 
-        Args:
-            samples_df: DataFrame containing multiple samples
-            output_dir: Directory to save reports
-            class_labels: Optional ground truth labels for samples
-        """
         print(f"\\n{'=' * 80}")
         print(f"BATCH EXPLANATION: {len(samples_df)} SAMPLES")
         print(f"{'=' * 80}\\n")
@@ -612,7 +558,7 @@ class HybridModelExplainer:
                                shap_values,
                                class_labels: Optional[List[str]],
                                save_path: Path):
-        """Generate comprehensive batch analysis report."""
+
         with open(save_path, 'w', encoding='utf-8') as f:
             f.write("=" * 80 + "\\n")
             f.write("BATCH SHAP ANALYSIS REPORT\\n")
@@ -666,12 +612,7 @@ class HybridModelExplainer:
                         f.write(f"{group_name.upper():20s} - Mean Importance: {group_importance:.6f}\\n")
 
     def get_top_features(self, sample_df_row: pd.Series, top_k: int = 10):
-        """
-        Get top K most influential features for a single sample.
 
-        Returns:
-            Tuple of (top_features, predicted_class_name)
-        """
         print(f"\\n🔍 Analyzing top {top_k} features...")
 
         sample_np = sample_df_row.values.reshape(1, -1)
@@ -720,10 +661,7 @@ class HybridModelExplainer:
     def compare_samples(self, sample_indices: List[int],
                         test_dataset,
                         output_dir: str = "."):
-        """
-        Compare explanations across multiple samples side-by-side.
-        Useful for understanding model behavior on different attack types.
-        """
+
         print(f"\\n{'=' * 80}")
         print(f"COMPARING {len(sample_indices)} SAMPLES")
         print(f"{'=' * 80}\\n")
